@@ -3,6 +3,7 @@ interface Category {
   name: string
   slug: string
   color: string
+  icon: string
   count: number
 }
 
@@ -10,15 +11,6 @@ interface CategoriesProps {
   categories: Category[]
   activeCategory: string
   onCategorySelect: (slug: string) => void
-}
-
-const CATEGORY_ICONS: Record<string, string> = {
-  'street-art': '🎨',
-  anime: '⚡',
-  nature: '🌿',
-  animals: '🐺',
-  abstract: '◈',
-  retro: '📼',
 }
 
 export function Categories({ categories, activeCategory, onCategorySelect }: CategoriesProps) {
@@ -84,7 +76,7 @@ export function Categories({ categories, activeCategory, onCategorySelect }: Cat
                   : 'border-border bg-card hover:border-primary/60 hover:bg-secondary'
               }`}
             >
-              <div className="text-3xl mb-2">{CATEGORY_ICONS[cat.slug] ?? '◆'}</div>
+              <div className="text-3xl mb-2">{cat.icon}</div>
               <div className="font-['Barlow_Condensed'] text-sm font-700 tracking-widest uppercase text-foreground">
                 {cat.name}
               </div>

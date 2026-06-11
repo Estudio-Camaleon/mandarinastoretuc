@@ -7,7 +7,7 @@ export function waLink(message: string): string {
 export function productMessage(name: string, price: number, qty = 1): string {
   const total = (price * qty).toFixed(2)
   return [
-    `Hi! I'd like to order:`,
+    `¡Hola! Quiero pedir:`,
     `- ${name} x${qty} = $${total}`,
     '',
     `Total: $${total}`,
@@ -21,5 +21,5 @@ export function cartMessage(
     (i) => `- ${i.name} x${i.qty} = $${(i.price * i.qty).toFixed(2)}`,
   )
   const total = items.reduce((s, i) => s + i.price * i.qty, 0)
-  return [`Hi! I'd like to order:`, ...lines, '', `Total: $${total.toFixed(2)}`].join('\n')
+  return [`¡Hola! Quiero pedir:`, ...lines, '', `Total: $${total.toFixed(2)}`].join('\n')
 }

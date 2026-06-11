@@ -1,6 +1,17 @@
-import { Instagram, Facebook, MessageCircle } from 'lucide-react'
+import { Instagram, Facebook } from 'lucide-react'
+import { WhatsAppIcon } from './WhatsAppIcon'
 
-export function Footer() {
+interface Category {
+  id: string
+  name: string
+  slug: string
+}
+
+interface FooterProps {
+  categories: Category[]
+}
+
+export function Footer({ categories }: FooterProps) {
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
   }
@@ -33,7 +44,7 @@ export function Footer() {
                   label: 'Facebook',
                 },
                 {
-                  Icon: MessageCircle,
+                  Icon: () => <WhatsAppIcon size={18} />,
                   href: `https://wa.me/${import.meta.env.VITE_WHATSAPP_PHONE || '5491123456789'}`,
                   label: 'WhatsApp',
                 },
@@ -56,20 +67,21 @@ export function Footer() {
               Tienda
             </div>
             <ul className="space-y-2">
-              {[
-                'Todos los Stickers',
-                'Street Art',
-                'Anime',
-                'Naturaleza',
-                'Animales',
-                'Abstracto',
-              ].map((item) => (
-                <li key={item}>
+              <li>
+                <button
+                  onClick={() => scrollTo('products')}
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Todos los Stickers
+                </button>
+              </li>
+              {categories.map((cat) => (
+                <li key={cat.id}>
                   <button
                     onClick={() => scrollTo('products')}
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
-                    {item}
+                    {cat.name}
                   </button>
                 </li>
               ))}

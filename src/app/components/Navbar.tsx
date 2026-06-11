@@ -32,7 +32,6 @@ export function Navbar({ cartCount, onAdminClick, onCartClick }: NavbarProps) {
           {[
             { label: 'TIENDA', id: 'products' },
             { label: 'COLECCIONES', id: 'categories' },
-            { label: 'RESEÑAS', id: 'testimonials' },
           ].map((item) => (
             <button
               key={item.id}
@@ -80,7 +79,6 @@ export function Navbar({ cartCount, onAdminClick, onCartClick }: NavbarProps) {
           {[
             { label: 'TIENDA', id: 'products' },
             { label: 'COLECCIONES', id: 'categories' },
-            { label: 'RESEÑAS', id: 'testimonials' },
           ].map((item) => (
             <button
               key={item.id}

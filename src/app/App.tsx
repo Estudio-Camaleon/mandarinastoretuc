@@ -111,7 +111,7 @@ export default function App() {
 
         <Products products={products} activeCategory={activeCategory} onAddToCart={addToCart} />
 
-        <Footer />
+        <Footer categories={categories} />
 
         {cartOpen && (
           <CartDrawer

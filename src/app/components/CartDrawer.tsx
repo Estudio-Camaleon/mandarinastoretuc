@@ -1,5 +1,6 @@
-import { X, Trash2, ShoppingBag, MessageCircle } from 'lucide-react'
+import { X, Trash2, ShoppingBag } from 'lucide-react'
 import { ImageWithFallback } from './ImageWithFallback'
+import { WhatsAppIcon } from './WhatsAppIcon'
 import { waLink, cartMessage } from '../../lib/whatsapp'
 import type { Product } from './Products'
 
@@ -116,7 +117,7 @@ export function CartDrawer({ items, onClose, onRemove, onUpdateQty }: CartDrawer
               rel="noopener noreferrer"
               className="w-full bg-primary text-white py-3 font-['Barlow_Condensed'] text-lg font-700 tracking-widest uppercase hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
             >
-              <MessageCircle size={18} />
+              <WhatsAppIcon size={18} />
               ENVIAR VIA WHATSAPP →
             </a>
             <button

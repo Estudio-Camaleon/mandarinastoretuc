@@ -3,6 +3,7 @@ export interface Category {
   name: string
   slug: string
   color: string
+  icon: string
   count: number
   created_at: string | null
 }
@@ -14,6 +15,10 @@ export interface Product {
   category: string
   description: string
   image: string
+  material: string
+  finish: string
+  size: string
+  waterproof: boolean
   rating: number
   reviews: number
   created_at: string | null

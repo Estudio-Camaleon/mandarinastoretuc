@@ -1,10 +1,11 @@
 import { useState, useEffect, useMemo } from 'react'
 import {
-  Plus, Pencil, Trash2, Search, MessageCircle, X,
+  Plus, Pencil, Trash2, Search, X,
   ArrowUpDown, ArrowUp, ArrowDown, AlertTriangle,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { fetchOrders, createOrder, updateOrder, deleteOrder } from '../../../lib/api'
+import { WhatsAppIcon } from '../../components/WhatsAppIcon'
 import { waLink, productMessage } from '../../../lib/whatsapp'
 import type { Order } from '../../../lib/database.types'
 
@@ -359,7 +360,7 @@ export function OrderViewer() {
                         className="p-1.5 text-muted-foreground hover:text-primary transition-colors"
                         title="Abrir en WhatsApp"
                       >
-                        <MessageCircle size={14} />
+                        <WhatsAppIcon size={14} />
                       </a>
                       <button
                         onClick={() => openEdit(order)}

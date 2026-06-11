@@ -1,5 +1,6 @@
-import { Instagram, Facebook, MessageCircle } from 'lucide-react'
+import { Instagram, Facebook } from 'lucide-react'
 import { ImageWithFallback } from './ImageWithFallback'
+import { WhatsAppIcon } from './WhatsAppIcon'
 
 export function Hero() {
   const scrollToProducts = () => {
@@ -28,13 +29,13 @@ export function Hero() {
         {/* Left: Text */}
         <div>
           {/* Logo mark */}
-          <div className="flex items-center gap-2  mb-6">
+          <div className="flex flex-col lg:flex-row items-center lg:items-center gap-2 mb-6">
             <img
               src="/media/logos/sticker_mandarina.png"
               alt="Mandarina Store"
-              className="h-35 md:h-50 w-auto"
+              className="h-35 lg:h-50 w-auto"
             />
-            <h1 className=" font-['Barlow_Condensed'] text-4xl md:text-6xl font-900 leading-none uppercase tracking-tight text-foreground mb-4">
+            <h1 className=" font-['Barlow_Condensed'] text-4xl lg:text-6xl font-900 leading-none uppercase tracking-tight text-foreground mb-4">
             PEGA TU
             <br />
             <span className="text-primary">ESTILO</span>
@@ -84,7 +85,7 @@ export function Hero() {
                 href: 'https://www.facebook.com/share/1H6kuhahZn/',
               },
               {
-                Icon: MessageCircle,
+                Icon: () => <WhatsAppIcon size={30} />,
                 label: 'WhatsApp',
                 href: `https://wa.me/${import.meta.env.VITE_WHATSAPP_PHONE || '5491123456789'}`,
               },
@@ -102,7 +103,7 @@ export function Hero() {
         </div>
 
         {/* Right: Sticker wall collage */}
-        <div className="hidden md:grid grid-cols-2 gap-3">
+        <div className="hidden lg:grid grid-cols-2 gap-3">
           {[
             'https://images.unsplash.com/photo-1763888647755-5754915925ff?w=600&h=400&fit=crop&auto=format',
             'https://images.unsplash.com/photo-1770375142184-4655d2bd2d4e?w=600&h=400&fit=crop&auto=format',

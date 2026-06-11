@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { X, ShoppingCart, Plus, Minus, Star, MessageCircle } from 'lucide-react'
+import { X, ShoppingCart, Plus, Minus, Star } from 'lucide-react'
 import { ImageWithFallback } from './ImageWithFallback'
+import { WhatsAppIcon } from './WhatsAppIcon'
 import { waLink, productMessage } from '../../lib/whatsapp'
 
 export interface Product {
@@ -10,6 +11,10 @@ export interface Product {
   category: string
   description: string
   image: string
+  material: string
+  finish: string
+  size: string
+  waterproof: boolean
   rating?: number
   reviews?: number
 }
@@ -94,10 +99,10 @@ function ProductModal({
               {/* Specs */}
               <div className="space-y-2 mb-6 border-t border-border pt-4">
                 {[
-                  { label: 'Material', value: 'Vinilo premium' },
-                  { label: 'Acabado', value: 'Mate / Brillante' },
-                  { label: 'Tamaño', value: '5–10 cm' },
-                  { label: 'Impermeable', value: 'Sí ✓' },
+                  { label: 'Material', value: product.material },
+                  { label: 'Acabado', value: product.finish },
+                  { label: 'Tamaño', value: product.size },
+                  { label: 'Impermeable', value: product.waterproof ? 'Sí ✓' : 'No' },
                 ].map(({ label, value }) => (
                   <div key={label} className="flex justify-between text-xs">
                     <span className="text-muted-foreground font-['Barlow_Condensed'] tracking-wider uppercase">
@@ -149,7 +154,7 @@ function ProductModal({
                 rel="noopener noreferrer"
                 className="w-full mt-2 border border-primary text-primary py-3 font-['Barlow_Condensed'] text-base font-700 tracking-widest uppercase hover:bg-primary hover:text-white transition-colors flex items-center justify-center gap-2"
               >
-                <MessageCircle size={18} />
+                <WhatsAppIcon size={18} />
                 COMPRAR VIA WHATSAPP
               </a>
             </div>

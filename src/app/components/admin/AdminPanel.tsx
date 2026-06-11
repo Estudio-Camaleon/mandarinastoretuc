@@ -120,7 +120,7 @@ export function AdminPanel({ products, categories, onRefresh, onLogout }: AdminP
         />
       )}
 
-      {/* Main content */}
+        {/* Main content */}
       <div className="flex-1 md:ml-56 flex flex-col min-h-screen">
         {/* Top bar */}
         <header className="sticky top-0 z-20 bg-card border-b border-border px-4 md:px-8 h-14 flex items-center justify-between">
@@ -131,9 +131,18 @@ export function AdminPanel({ products, categories, onRefresh, onLogout }: AdminP
             >
               <Menu size={20} />
             </button>
-            <div className="font-['Barlow_Condensed'] text-lg font-700 uppercase tracking-wide text-foreground">
-              {NAV_ITEMS.find((n) => n.id === view)?.label}
-            </div>
+            {view !== 'dashboard' ? (
+              <button
+                onClick={() => setView('dashboard')}
+                className="flex items-center gap-1 text-xs font-['Barlow_Condensed'] tracking-widest uppercase text-muted-foreground hover:text-foreground transition-colors"
+              >
+                ← PANEL
+              </button>
+            ) : (
+              <div className="font-['Barlow_Condensed'] text-lg font-700 uppercase tracking-wide text-foreground">
+                {NAV_ITEMS.find((n) => n.id === view)?.label}
+              </div>
+            )}
           </div>
           <button
             onClick={onLogout}
