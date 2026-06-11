@@ -71,25 +71,41 @@ export function Categories({ categories, activeCategory, onCategorySelect }: Cat
             <button
               key={cat.id}
               onClick={() => onCategorySelect(cat.slug)}
-              className={`group relative aspect-square flex flex-col items-center justify-center border transition-all duration-200 rounded-xl ${
+              className={`group relative aspect-square flex flex-col items-center justify-center border transition-all duration-200 rounded-xl overflow-hidden ${
                 activeCategory === cat.slug
-                  ? 'border-primary bg-primary/10'
-                  : 'border-border bg-card hover:border-primary/60 hover:bg-secondary'
-              }`}
+                  ? 'border-primary'
+                  : 'border-border hover:border-primary/60'
+              } ${cat.image ? 'text-white' : 'bg-card'}`}
             >
               {cat.image ? (
-                <div className="w-12 h-12 mb-2 overflow-hidden rounded">
-                  <img src={cat.image} alt={cat.name} className="w-full h-full object-cover" />
-                </div>
+                <>
+                  <img
+                    src={cat.image}
+                    alt={cat.name}
+                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/30" />
+                  {cat.icon && (
+                    <div className="relative text-3xl mb-2 drop-shadow-lg">{cat.icon}</div>
+                  )}
+                  <div className="relative font-['Barlow_Condensed'] text-sm font-700 tracking-widest uppercase drop-shadow-lg">
+                    {cat.name}
+                  </div>
+                  <div className="relative text-xs text-white/70 mt-1 drop-shadow">
+                    {cat.count} diseños
+                  </div>
+                </>
               ) : (
-                <div className="text-3xl mb-2">{cat.icon}</div>
+                <>
+                  {cat.icon && <div className="text-3xl mb-2">{cat.icon}</div>}
+                  <div className="font-['Barlow_Condensed'] text-sm font-700 tracking-widest uppercase text-foreground">
+                    {cat.name}
+                  </div>
+                  <div className="text-xs text-muted-foreground mt-1">{cat.count} diseños</div>
+                </>
               )}
-              <div className="font-['Barlow_Condensed'] text-sm font-700 tracking-widest uppercase text-foreground">
-                {cat.name}
-              </div>
-              <div className="text-xs text-muted-foreground mt-1">{cat.count} diseños</div>
               {activeCategory === cat.slug && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary z-10" />
               )}
             </button>
           ))}
