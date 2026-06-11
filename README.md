@@ -34,9 +34,9 @@ npm i
 2. Crear archivo `.env` en la raíz:
 
 ```env
-VITE_SUPABASE_URL=https://bwfyftubukotwvvjrgaj.supabase.co
-VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-VITE_WHATSAPP_PHONE=5493813013832
+VITE_SUPABASE_URL=https://URL_SUPABASE.supabase.co
+VITE_SUPABASE_ANON_KEY=ANON_KEY
+VITE_WHATSAPP_PHONE=54938222222
 ```
 
 3. Correr migraciones en Supabase SQL Editor (o con `supabase db push` luego de hacer login):
