@@ -1,3 +1,9 @@
+## [1.1.4](https://github.com/Estudio-Camaleon/mandarinastoretuc/compare/v1.1.3...v1.1.4) (2026-06-11)
+
+### Bug Fixes
+
+* align orders status constraint with app values in migration ([c9a0182](https://github.com/Estudio-Camaleon/mandarinastoretuc/commit/c9a0182b2f4195df97f080da8055a78dfc117337))
+
 ## [1.1.3](https://github.com/Estudio-Camaleon/mandarinastoretuc/compare/v1.1.2...v1.1.3) (2026-06-11)
 
 ### Bug Fixes
