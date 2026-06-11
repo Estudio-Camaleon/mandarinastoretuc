@@ -1,6 +1,13 @@
 import { Instagram, Facebook } from 'lucide-react'
 import { ImageWithFallback } from './ImageWithFallback'
 import { WhatsAppIcon } from './WhatsAppIcon'
+import { SOCIAL_LINKS, LOGO_PATH } from '../../lib/site'
+
+const SOCIAL_ICONS: Record<string, React.ComponentType<{ size?: number }>> = {
+  Instagram,
+  Facebook,
+  WhatsApp: ({ size }) => <WhatsAppIcon size={size ?? 18} />,
+}
 
 export function Hero() {
   const scrollToProducts = () => {
@@ -31,7 +38,7 @@ export function Hero() {
           {/* Logo mark */}
           <div className="flex flex-col lg:flex-row items-center lg:items-center gap-2 mb-6">
             <img
-              src="/media/logos/sticker_mandarina.png"
+              src={LOGO_PATH}
               alt="Mandarina Store"
               className="h-35 lg:h-50 w-auto"
             />
@@ -73,32 +80,19 @@ export function Hero() {
               Seguinos
             </span>
             <div className="w-8 h-px bg-border" />
-            {[
-              {
-                Icon: Instagram,
-                label: 'Instagram',
-                href: 'https://www.instagram.com/mandarina.store.tuc/?hl=es',
-              },
-              {
-                Icon: Facebook,
-                label: 'Facebook',
-                href: 'https://www.facebook.com/share/1H6kuhahZn/',
-              },
-              {
-                Icon: () => <WhatsAppIcon size={30} />,
-                label: 'WhatsApp',
-                href: `https://wa.me/${import.meta.env.VITE_WHATSAPP_PHONE || '5491123456789'}`,
-              },
-            ].map(({ Icon, label, href }) => (
-              <a
-                key={label}
-                href={href}
-                aria-label={label}
-                className="text-muted-foreground hover:text-primary transition-colors"
-              >
-                <Icon size={30} />
-              </a>
-            ))}
+            {SOCIAL_LINKS.map(({ label, href }) => {
+              const Icon = SOCIAL_ICONS[label]
+              return (
+                <a
+                  key={label}
+                  href={href}
+                  aria-label={label}
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
+                  {Icon && <Icon size={30} />}
+                </a>
+              )
+            })}
           </div>
         </div>
 

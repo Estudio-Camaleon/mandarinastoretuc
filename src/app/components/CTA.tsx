@@ -1,5 +1,12 @@
 import { Instagram, Facebook, MessageCircle } from 'lucide-react'
 import { ImageWithFallback } from './ImageWithFallback'
+import { SOCIAL_LINKS } from '../../lib/site'
+
+const SOCIAL_ICONS: Record<string, React.ComponentType<{ size?: number }>> = {
+  Instagram,
+  Facebook,
+  WhatsApp: ({ size }) => <MessageCircle size={size ?? 20} />,
+}
 
 export function CTA() {
   return (
@@ -44,25 +51,24 @@ export function CTA() {
           </h2>
 
           <div className="flex justify-center gap-6 mb-10">
-            {[
-              { Icon: Instagram, label: 'Instagram', href: 'https://www.instagram.com/mandarina.store.tuc/?hl=es' },
-              { Icon: Facebook, label: 'Facebook', href: 'https://www.facebook.com/share/1H6kuhahZn/' },
-              { Icon: MessageCircle, label: 'WhatsApp', href: `https://wa.me/${import.meta.env.VITE_WHATSAPP_PHONE || '5491123456789'}` },
-            ].map(({ Icon, label, href }) => (
-              <a
-                key={label}
-                href={href}
-                className="flex flex-col items-center gap-2 group"
-                aria-label={label}
-              >
-                <div className="w-12 h-12 border border-border flex items-center justify-center group-hover:border-primary group-hover:bg-primary transition-all">
-                  <Icon size={20} className="group-hover:text-white transition-colors" />
-                </div>
-                <span className="text-xs font-['Barlow_Condensed'] tracking-widest text-muted-foreground uppercase">
-                  {label}
-                </span>
-              </a>
-            ))}
+            {SOCIAL_LINKS.map(({ label, href }) => {
+              const Icon = SOCIAL_ICONS[label]
+              return (
+                <a
+                  key={label}
+                  href={href}
+                  className="flex flex-col items-center gap-2 group"
+                  aria-label={label}
+                >
+                  <div className="w-12 h-12 border border-border flex items-center justify-center group-hover:border-primary group-hover:bg-primary transition-all">
+                    {Icon && <Icon size={20} className="group-hover:text-white transition-colors" />}
+                  </div>
+                  <span className="text-xs font-['Barlow_Condensed'] tracking-widest text-muted-foreground uppercase">
+                    {label}
+                  </span>
+                </a>
+              )
+            })}
           </div>
 
           {/* UGC Grid */}
