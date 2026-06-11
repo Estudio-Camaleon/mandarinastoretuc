@@ -97,6 +97,12 @@ create policy "Only authenticated can delete orders"
 alter table public.orders add column if not exists customer_phone text not null default '';
 alter table public.orders add column if not exists notes text not null default '';
 
+-- Align status check constraint with app values
+alter table public.orders drop constraint if exists orders_status_check;
+alter table public.orders alter column status set default 'pending';
+alter table public.orders add constraint orders_status_check
+  check (status in ('pending', 'confirmed', 'shipped', 'delivered', 'cancelled'));
+
 -- ── Seed data ────────────────────────────────────────
 
 insert into public.categories (name, slug, color, count) values
