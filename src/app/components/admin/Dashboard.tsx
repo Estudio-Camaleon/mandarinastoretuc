@@ -1,64 +1,134 @@
-import { Package, Tag, ShoppingBag, TrendingUp, ArrowRight } from "lucide-react";
-import type { Product } from "../Products";
+import { useState, useEffect } from 'react'
+import { Package, Tag, ShoppingBag, TrendingUp, ArrowRight } from 'lucide-react'
+import { Skeleton } from '../ui/skeleton'
+import type { Product } from '../Products'
+import type { Category } from '../../../lib/database.types'
+import { fetchOrders } from '../../../lib/api'
 
-interface Category {
-  id: string;
-  name: string;
-  slug: string;
-  color: string;
-  count: number;
-}
-
-type AdminView = "dashboard" | "products" | "categories" | "orders";
+type AdminView = 'dashboard' | 'products' | 'categories' | 'orders'
 
 interface DashboardProps {
-  products: Product[];
-  categories: Category[];
-  onNavigate: (view: AdminView) => void;
+  products: Product[]
+  categories: Category[]
+  onNavigate: (view: AdminView) => void
 }
 
-const MOCK_ORDERS = [
-  { id: "#1042", customer: "Kai Martinez", product: "Neon Wolf Sticker", status: "Shipped", amount: 4.99, date: "Jun 9" },
-  { id: "#1041", customer: "Sofia R.", product: "Abstract Pack x5", status: "Processing", amount: 14.95, date: "Jun 9" },
-  { id: "#1040", customer: "Jordan L.", product: "Street Tag Vol.2", status: "Delivered", amount: 3.99, date: "Jun 8" },
-  { id: "#1039", customer: "Mia Torres", product: "Anime Eyes", status: "Delivered", amount: 4.99, date: "Jun 7" },
-  { id: "#1038", customer: "Alex K.", product: "Bear Club Sticker", status: "Delivered", amount: 3.99, date: "Jun 6" },
-];
-
 const STATUS_COLORS: Record<string, string> = {
-  Shipped: "text-primary bg-primary/10",
-  Processing: "text-yellow-400 bg-yellow-400/10",
-  Delivered: "text-green-400 bg-green-400/10",
-};
+  shipped: 'text-primary bg-primary/10',
+  confirmed: 'text-blue-400 bg-blue-400/10',
+  delivered: 'text-green-400 bg-green-400/10',
+  pending: 'text-yellow-400 bg-yellow-400/10',
+  cancelled: 'text-muted-foreground bg-secondary',
+}
+
+function StatCard({
+  label,
+  value,
+  Icon,
+  color,
+  action,
+}: {
+  label: string
+  value: string | number
+  Icon: React.FC<{ size?: number }>
+  color: string
+  action: () => void
+}) {
+  return (
+    <button
+      onClick={action}
+      className="bg-card border border-border p-5 text-left hover:border-primary/50 transition-colors group"
+    >
+      <div className={`${color} mb-3`}>
+        <Icon size={20} />
+      </div>
+      <div className="font-['Barlow_Condensed'] text-3xl font-900 text-foreground">{value}</div>
+      <div className="text-xs font-['Barlow_Condensed'] tracking-widest text-muted-foreground uppercase mt-1">
+        {label}
+      </div>
+      <div className="text-primary opacity-0 group-hover:opacity-100 transition-opacity text-xs font-['Barlow_Condensed'] uppercase tracking-widest mt-2">
+        MANAGE →
+      </div>
+    </button>
+  )
+}
 
 export function Dashboard({ products, categories, onNavigate }: DashboardProps) {
-  const revenue = MOCK_ORDERS.reduce((sum, o) => sum + o.amount, 0);
+  const [orders, setOrders] = useState<
+    {
+      id: string
+      order_number: string
+      customer_name: string
+      product_name: string
+      status: string
+      amount: number
+      date: string
+    }[]
+  >([])
+  const [ordersLoading, setOrdersLoading] = useState(true)
+
+  useEffect(() => {
+    ;(async () => {
+      try {
+        const data = await fetchOrders()
+        setOrders(
+          data.slice(0, 5).map((o) => ({
+            id: o.id,
+            order_number: o.order_number,
+            customer_name: o.customer_name,
+            product_name: o.product_name,
+            status: o.status,
+            amount: o.amount,
+            date: o.created_at
+              ? new Date(o.created_at).toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                })
+              : '',
+          })),
+        )
+      } catch (err) {
+        console.error('Failed to load orders:', err)
+      } finally {
+        setOrdersLoading(false)
+      }
+    })()
+  }, [])
+
+  const revenue = orders.reduce((sum, o) => sum + o.amount, 0)
 
   return (
     <div className="space-y-8">
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {[
-          { label: "Total Products", value: products.length, Icon: Package, color: "text-primary", action: () => onNavigate("products") },
-          { label: "Categories", value: categories.length, Icon: Tag, color: "text-blue-400", action: () => onNavigate("categories") },
-          { label: "Recent Orders", value: MOCK_ORDERS.length, Icon: ShoppingBag, color: "text-green-400", action: () => onNavigate("orders") },
-          { label: "Revenue (demo)", value: `$${revenue.toFixed(2)}`, Icon: TrendingUp, color: "text-yellow-400", action: () => {} },
-        ].map(({ label, value, Icon, color, action }) => (
-          <button
-            key={label}
-            onClick={action}
-            className="bg-card border border-border p-5 text-left hover:border-primary/50 transition-colors group"
-          >
-            <div className={`${color} mb-3`}>
-              <Icon size={20} />
-            </div>
-            <div className="font-['Barlow_Condensed'] text-3xl font-900 text-foreground">{value}</div>
-            <div className="text-xs font-['Barlow_Condensed'] tracking-widest text-muted-foreground uppercase mt-1">{label}</div>
-            <div className="text-primary opacity-0 group-hover:opacity-100 transition-opacity text-xs font-['Barlow_Condensed'] uppercase tracking-widest mt-2">
-              MANAGE →
-            </div>
-          </button>
-        ))}
+        <StatCard
+          label="Total Productos"
+          value={products.length}
+          Icon={Package}
+          color="text-primary"
+          action={() => onNavigate('products')}
+        />
+        <StatCard
+          label="Categorías"
+          value={categories.length}
+          Icon={Tag}
+          color="text-blue-400"
+          action={() => onNavigate('categories')}
+        />
+        <StatCard
+          label="Órdenes"
+          value={ordersLoading ? '...' : orders.length}
+          Icon={ShoppingBag}
+          color="text-green-400"
+          action={() => onNavigate('orders')}
+        />
+        <StatCard
+          label="Ingresos"
+          value={ordersLoading ? '...' : `$${revenue.toFixed(2)}`}
+          Icon={TrendingUp}
+          color="text-yellow-400"
+          action={() => {}}
+        />
       </div>
 
       <div className="grid lg:grid-cols-3 gap-6">
@@ -66,72 +136,113 @@ export function Dashboard({ products, categories, onNavigate }: DashboardProps) 
         <div className="lg:col-span-2 bg-card border border-border">
           <div className="px-5 py-4 border-b border-border flex items-center justify-between">
             <div className="font-['Barlow_Condensed'] font-700 uppercase tracking-wide text-foreground">
-              Recent Orders
+              Órdenes Recientes
             </div>
             <button
-              onClick={() => onNavigate("orders")}
+              onClick={() => onNavigate('orders')}
               className="text-xs text-primary font-['Barlow_Condensed'] uppercase tracking-widest flex items-center gap-1 hover:gap-2 transition-all"
             >
-              VIEW ALL <ArrowRight size={12} />
+              VER TODO <ArrowRight size={12} />
             </button>
           </div>
-          <div className="divide-y divide-border">
-            {MOCK_ORDERS.map((order) => (
-              <div key={order.id} className="px-5 py-3 flex items-center justify-between gap-3 hover:bg-secondary/30 transition-colors">
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className="font-['Barlow_Condensed'] text-primary text-sm font-700 w-14 flex-shrink-0">{order.id}</div>
-                  <div className="min-w-0">
-                    <div className="text-sm text-foreground font-['Barlow_Condensed'] font-600 truncate">{order.customer}</div>
-                    <div className="text-xs text-muted-foreground truncate">{order.product}</div>
+          {ordersLoading ? (
+            <div className="divide-y divide-border">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="px-5 py-4 flex items-center gap-4">
+                  <Skeleton className="h-4 w-16" />
+                  <div className="flex-1 space-y-2">
+                    <Skeleton className="h-3.5 w-32" />
+                    <Skeleton className="h-3 w-48" />
+                  </div>
+                  <div className="text-right space-y-2">
+                    <Skeleton className="h-4 w-16 ml-auto" />
+                    <Skeleton className="h-3 w-12 ml-auto" />
                   </div>
                 </div>
-                <div className="flex items-center gap-3 flex-shrink-0">
-                  <span className={`text-[10px] font-['Barlow_Condensed'] font-700 uppercase tracking-wider px-2 py-0.5 ${STATUS_COLORS[order.status] ?? ""}`}>
-                    {order.status}
-                  </span>
-                  <div className="text-right">
-                    <div className="font-['Barlow_Condensed'] font-900 text-foreground">${order.amount.toFixed(2)}</div>
-                    <div className="text-[10px] text-muted-foreground">{order.date}</div>
+              ))}
+            </div>
+          ) : orders.length === 0 ? (
+            <div className="px-5 py-8 text-center text-sm text-muted-foreground font-['Barlow_Condensed'] uppercase tracking-widest">
+              Aún no hay órdenes
+            </div>
+          ) : (
+            <div className="divide-y divide-border">
+              {orders.map((order) => (
+                <div
+                  key={order.id}
+                  className="px-5 py-3 flex items-center justify-between gap-3 hover:bg-secondary/30 transition-colors"
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="font-['Barlow_Condensed'] text-primary text-sm font-700 w-14 flex-shrink-0">
+                      {order.order_number}
+                    </div>
+                    <div className="min-w-0">
+                      <div className="text-sm text-foreground font-['Barlow_Condensed'] font-600 truncate">
+                        {order.customer_name}
+                      </div>
+                      <div className="text-xs text-muted-foreground truncate">
+                        {order.product_name}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 flex-shrink-0">
+                    <span
+                      className={`text-[10px] font-['Barlow_Condensed'] font-700 uppercase tracking-wider px-2 py-0.5 ${STATUS_COLORS[order.status] ?? ''}`}
+                    >
+                      {order.status}
+                    </span>
+                    <div className="text-right">
+                      <div className="font-['Barlow_Condensed'] font-900 text-foreground">
+                        ${order.amount.toFixed(2)}
+                      </div>
+                      <div className="text-[10px] text-muted-foreground">{order.date}</div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Category breakdown */}
         <div className="bg-card border border-border">
           <div className="px-5 py-4 border-b border-border flex items-center justify-between">
             <div className="font-['Barlow_Condensed'] font-700 uppercase tracking-wide text-foreground">
-              By Category
+              Por Categoría
             </div>
             <button
-              onClick={() => onNavigate("categories")}
+              onClick={() => onNavigate('categories')}
               className="text-xs text-primary font-['Barlow_Condensed'] uppercase tracking-widest flex items-center gap-1 hover:gap-2 transition-all"
             >
-              EDIT <ArrowRight size={12} />
+              EDITAR <ArrowRight size={12} />
             </button>
           </div>
           <div className="p-5 space-y-3">
-            {categories.map((cat) => {
-              const count = products.filter((p) => p.category === cat.slug).length;
-              const pct = products.length ? Math.round((count / products.length) * 100) : 0;
-              return (
-                <div key={cat.id}>
-                  <div className="flex justify-between text-xs mb-1">
-                    <span className="font-['Barlow_Condensed'] uppercase tracking-wider text-foreground">{cat.name}</span>
-                    <span className="text-muted-foreground">{count} products</span>
-                  </div>
-                  <div className="w-full bg-secondary h-1.5">
-                    <div className="h-full bg-primary transition-all duration-500" style={{ width: `${pct}%` }} />
-                  </div>
-                </div>
-              );
-            })}
-            {categories.length === 0 && (
+            {categories.length === 0 ? (
               <div className="text-muted-foreground text-sm font-['Barlow_Condensed'] uppercase tracking-widest">
-                No categories yet
+                Aún no hay categorías
               </div>
+            ) : (
+              categories.map((cat) => {
+                const count = products.filter((p) => p.category === cat.slug).length
+                const pct = products.length ? Math.round((count / products.length) * 100) : 0
+                return (
+                  <div key={cat.id}>
+                    <div className="flex justify-between text-xs mb-1">
+                      <span className="font-['Barlow_Condensed'] uppercase tracking-wider text-foreground">
+                        {cat.name}
+                      </span>
+                      <span className="text-muted-foreground">{count} productos</span>
+                    </div>
+                    <div className="w-full bg-secondary h-1.5">
+                      <div
+                        className="h-full bg-primary transition-all duration-500"
+                        style={{ width: `${pct}%` }}
+                      />
+                    </div>
+                  </div>
+                )
+              })
             )}
           </div>
         </div>
@@ -140,14 +251,30 @@ export function Dashboard({ products, categories, onNavigate }: DashboardProps) 
       {/* Quick actions */}
       <div>
         <div className="font-['Barlow_Condensed'] text-sm font-700 uppercase tracking-widest text-muted-foreground mb-4">
-          Quick Actions
+          Acciones Rápidas
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {[
-            { label: "Add Product", action: () => onNavigate("products"), desc: "Upload a new vinyl design" },
-            { label: "New Category", action: () => onNavigate("categories"), desc: "Create a collection" },
-            { label: "View Orders", action: () => onNavigate("orders"), desc: "Check purchase requests" },
-            { label: "All Products", action: () => onNavigate("products"), desc: "Manage your catalog" },
+            {
+              label: 'Agregar Producto',
+              action: () => onNavigate('products'),
+              desc: 'Subir un nuevo diseño vinílico',
+            },
+            {
+              label: 'Nueva Categoría',
+              action: () => onNavigate('categories'),
+              desc: 'Crear una colección',
+            },
+            {
+              label: 'Ver Órdenes',
+              action: () => onNavigate('orders'),
+              desc: 'Revisar solicitudes de compra',
+            },
+            {
+              label: 'Todos los Productos',
+              action: () => onNavigate('products'),
+              desc: 'Gestionar tu catálogo',
+            },
           ].map(({ label, action, desc }) => (
             <button
               key={label}
@@ -163,5 +290,5 @@ export function Dashboard({ products, categories, onNavigate }: DashboardProps) 
         </div>
       </div>
     </div>
-  );
+  )
 }

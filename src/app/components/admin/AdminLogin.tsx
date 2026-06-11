@@ -1,42 +1,50 @@
-import { useState } from "react";
-import { Eye, EyeOff, Lock } from "lucide-react";
+import { useState } from 'react'
+import { Eye, EyeOff, Lock } from 'lucide-react'
+import { supabase } from '../../../lib/supabase'
 
 interface AdminLoginProps {
-  onLogin: () => void;
-  onBack: () => void;
+  onLogin: () => void
+  onBack: () => void
 }
 
 export function AdminLogin({ onLogin, onBack }: AdminLoginProps) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPw, setShowPw] = useState(false);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [showPw, setShowPw] = useState(false)
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
-    // Simulate auth delay
-    await new Promise((r) => setTimeout(r, 600));
-    if (email === "admin@stkrco.com" && password === "admin123") {
-      onLogin();
+    e.preventDefault()
+    setLoading(true)
+    setError('')
+
+    const { error: authError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    })
+
+    if (authError) {
+      setError(authError.message)
     } else {
-      setError("Invalid credentials. Try admin@stkrco.com / admin123");
+      onLogin()
     }
-    setLoading(false);
-  };
+
+    setLoading(false)
+  }
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
         {/* Logo */}
         <div className="text-center mb-10">
-          <div className="font-['Barlow_Condensed'] text-5xl font-black tracking-tight text-foreground">
-            STKR<span className="text-primary">.</span>CO
-          </div>
+          <img
+            src="/media/logos/sticker_mandarina.png"
+            alt="MandarinaStore"
+            className="h-12 md:h-14 w-auto mx-auto"
+          />
           <div className="text-xs font-['Barlow_Condensed'] tracking-widest text-muted-foreground uppercase mt-1">
-            Admin Panel
+            Panel de Administración
           </div>
         </div>
 
@@ -44,32 +52,32 @@ export function AdminLogin({ onLogin, onBack }: AdminLoginProps) {
           <div className="flex items-center gap-2 mb-6">
             <Lock size={16} className="text-primary" />
             <h1 className="font-['Barlow_Condensed'] text-xl font-700 uppercase tracking-wider text-foreground">
-              Sign In
+              Iniciar Sesión
             </h1>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-xs font-['Barlow_Condensed'] tracking-widest uppercase text-muted-foreground mb-2">
-                Email
+                Correo Electrónico
               </label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                placeholder="admin@stkrco.com"
+                placeholder="admin@mandarinastore.com"
                 className="w-full bg-secondary border border-border px-4 py-3 text-foreground text-sm placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary transition-colors"
               />
             </div>
 
             <div>
               <label className="block text-xs font-['Barlow_Condensed'] tracking-widest uppercase text-muted-foreground mb-2">
-                Password
+                Contraseña
               </label>
               <div className="relative">
                 <input
-                  type={showPw ? "text" : "password"}
+                  type={showPw ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -97,13 +105,13 @@ export function AdminLogin({ onLogin, onBack }: AdminLoginProps) {
               disabled={loading}
               className="w-full bg-primary text-white py-3 font-['Barlow_Condensed'] text-base font-700 tracking-widest uppercase hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-2"
             >
-              {loading ? "SIGNING IN..." : "SIGN IN →"}
+              {loading ? 'INICIANDO...' : 'INICIAR SESIÓN →'}
             </button>
           </form>
 
           <div className="mt-4 text-center">
             <div className="text-xs text-muted-foreground font-['Barlow_Condensed'] tracking-wide">
-              Demo: admin@stkrco.com / admin123
+              Usa tus credenciales de Supabase Auth
             </div>
           </div>
         </div>
@@ -112,9 +120,9 @@ export function AdminLogin({ onLogin, onBack }: AdminLoginProps) {
           onClick={onBack}
           className="w-full mt-4 text-xs font-['Barlow_Condensed'] tracking-widest uppercase text-muted-foreground hover:text-foreground transition-colors py-2"
         >
-          ← BACK TO STORE
+          ← VOLVER A LA TIENDA
         </button>
       </div>
     </div>
-  );
+  )
 }

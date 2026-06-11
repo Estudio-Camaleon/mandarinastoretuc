@@ -1,39 +1,39 @@
-import { Star } from "lucide-react";
+import { Star } from 'lucide-react'
 
 const TESTIMONIALS = [
   {
-    id: "1",
-    name: "Kai M.",
-    handle: "@kai_mtl",
-    text: "These stickers are insane quality. Put them on my skateboard deck 6 months ago and they still look fresh. The NEON WOLF one is my favorite.",
+    id: '1',
+    name: 'Kai M.',
+    handle: '@kai_mtl',
+    text: 'Estos stickers son de una calidad increíble. Los puse en mi skateboard hace 6 meses y todavía se ven como nuevos. El NEON WOLF es mi favorito.',
     rating: 5,
-    product: "Neon Wolf Sticker",
+    product: 'Neon Wolf Sticker',
   },
   {
-    id: "2",
-    name: "Sofia R.",
-    handle: "@sofiar_designs",
-    text: "Ordered 10 packs for my laptop and notebooks. Waterproof and the colors don't fade. STKR.CO is the only place I buy stickers now.",
+    id: '2',
+    name: 'Sofia R.',
+    handle: '@sofiar_designs',
+    text: 'Pedí 10 packs para mi laptop y cuadernos. Impermeables y los colores no se desvanecen. Mandarina Store es el único lugar donde compro stickers ahora.',
     rating: 5,
-    product: "Abstract Pack x10",
+    product: 'Abstract Pack x10',
   },
   {
-    id: "3",
-    name: "Jordan L.",
-    handle: "@jordy_streetwear",
-    text: "Dropped them on my water bottle and helmet. Still holding up after the gym, rain, everything. Fast shipping too — came in 3 days.",
+    id: '3',
+    name: 'Jordan L.',
+    handle: '@jordy_streetwear',
+    text: 'Los pegué en mi botella de agua y casco. Siguen intactos después del gimnasio, lluvia, todo. Envío rápido también — llegó en 3 días.',
     rating: 5,
-    product: "Street Tag Collection",
+    product: 'Street Tag Collection',
   },
   {
-    id: "4",
-    name: "Mia T.",
-    handle: "@mia.creative",
-    text: "The anime collection is absolutely fire. The print quality is so sharp. I'll definitely be back for the next drop.",
+    id: '4',
+    name: 'Mia T.',
+    handle: '@mia.creative',
+    text: 'La colección anime es absolutamente increíble. La calidad de impresión es muy nítida. Definitivamente volveré para el próximo lanzamiento.',
     rating: 5,
-    product: "Anime Eyes Sticker",
+    product: 'Anime Eyes Sticker',
   },
-];
+]
 
 export function Testimonials() {
   return (
@@ -42,10 +42,12 @@ export function Testimonials() {
         {/* Header */}
         <div className="mb-12">
           <div className="text-xs font-['Barlow_Condensed'] tracking-widest text-primary uppercase mb-2">
-            — REAL TALK
+            — OPINIONES REALES
           </div>
           <h2 className="font-['Barlow_Condensed'] text-4xl md:text-5xl font-900 uppercase leading-none text-foreground">
-            WHAT THE<br />STREETS SAY.
+            LO QUE LA
+            <br />
+            CALLE DICE.
           </h2>
         </div>
 
@@ -83,19 +85,21 @@ export function Testimonials() {
         {/* Social proof bar */}
         <div className="mt-10 border border-border p-5 grid grid-cols-2 md:grid-cols-4 gap-5 bg-card">
           {[
-            { emoji: "⭐", value: "4.9 / 5", label: "Average rating" },
-            { emoji: "📦", value: "10,000+", label: "Happy customers" },
-            { emoji: "🔁", value: "94%", label: "Repeat buyers" },
-            { emoji: "🚚", value: "2–4 days", label: "Avg. delivery" },
+            { emoji: '⭐', value: '4.9 / 5', label: 'Valoración media' },
+            { emoji: '📦', value: '10,000+', label: 'Clientes felices' },
+            { emoji: '🔁', value: '94%', label: 'Compradores frecuentes' },
+            { emoji: '🚚', value: '2–4 días', label: 'Entrega media' },
           ].map(({ emoji, value, label }) => (
             <div key={label} className="text-center">
               <div className="text-2xl mb-1">{emoji}</div>
               <div className="font-['Barlow_Condensed'] text-xl font-900 text-primary">{value}</div>
-              <div className="text-xs text-muted-foreground font-['Barlow_Condensed'] tracking-wider uppercase">{label}</div>
+              <div className="text-xs text-muted-foreground font-['Barlow_Condensed'] tracking-wider uppercase">
+                {label}
+              </div>
             </div>
           ))}
         </div>
       </div>
     </section>
-  );
+  )
 }

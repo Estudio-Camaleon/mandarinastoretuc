@@ -1,68 +1,69 @@
-import { useState } from "react";
+import { useState } from 'react'
 import {
-  LayoutDashboard, Package, Tag, ShoppingBag, LogOut, Menu, X, ChevronRight
-} from "lucide-react";
-import type { Product } from "../Products";
-import { Dashboard } from "./Dashboard";
-import { ProductManager } from "./ProductManager";
-import { CategoryManager } from "./CategoryManager";
-import { OrderViewer } from "./OrderViewer";
-
-interface Category {
-  id: string;
-  name: string;
-  slug: string;
-  color: string;
-  count: number;
-}
+  LayoutDashboard,
+  Package,
+  Tag,
+  ShoppingBag,
+  LogOut,
+  Menu,
+  X,
+  ChevronRight,
+} from 'lucide-react'
+import type { Product } from '../Products'
+import type { Category } from '../../../lib/database.types'
+import { Dashboard } from './Dashboard'
+import { ProductManager } from './ProductManager'
+import { CategoryManager } from './CategoryManager'
+import { OrderViewer } from './OrderViewer'
 
 interface AdminPanelProps {
-  products: Product[];
-  categories: Category[];
-  onProductsChange: (products: Product[]) => void;
-  onCategoriesChange: (categories: Category[]) => void;
-  onLogout: () => void;
+  products: Product[]
+  categories: Category[]
+  onRefresh: () => void
+  onLogout: () => void
 }
 
-type AdminView = "dashboard" | "products" | "categories" | "orders";
+type AdminView = 'dashboard' | 'products' | 'categories' | 'orders'
 
 const NAV_ITEMS: { id: AdminView; label: string; Icon: React.FC<{ size?: number }> }[] = [
-  { id: "dashboard", label: "Dashboard", Icon: LayoutDashboard },
-  { id: "products", label: "Products", Icon: Package },
-  { id: "categories", label: "Categories", Icon: Tag },
-  { id: "orders", label: "Orders", Icon: ShoppingBag },
-];
+  { id: 'dashboard', label: 'Panel', Icon: LayoutDashboard },
+  { id: 'products', label: 'Productos', Icon: Package },
+  { id: 'categories', label: 'Categorías', Icon: Tag },
+  { id: 'orders', label: 'Órdenes', Icon: ShoppingBag },
+]
 
-export function AdminPanel({ products, categories, onProductsChange, onCategoriesChange, onLogout }: AdminPanelProps) {
-  const [view, setView] = useState<AdminView>("dashboard");
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+export function AdminPanel({ products, categories, onRefresh, onLogout }: AdminPanelProps) {
+  const [view, setView] = useState<AdminView>('dashboard')
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const renderView = () => {
     switch (view) {
-      case "dashboard":
-        return <Dashboard products={products} categories={categories} onNavigate={setView} />;
-      case "products":
-        return <ProductManager products={products} categories={categories} onChange={onProductsChange} />;
-      case "categories":
-        return <CategoryManager categories={categories} products={products} onChange={onCategoriesChange} />;
-      case "orders":
-        return <OrderViewer />;
+      case 'dashboard':
+        return <Dashboard products={products} categories={categories} onNavigate={setView} />
+      case 'products':
+        return <ProductManager products={products} categories={categories} onRefresh={onRefresh} />
+      case 'categories':
+        return <CategoryManager categories={categories} products={products} onRefresh={onRefresh} />
+      case 'orders':
+        return <OrderViewer />
     }
-  };
+  }
 
   return (
     <div className="min-h-screen bg-background flex">
       {/* Sidebar */}
       <aside
         className={`fixed inset-y-0 left-0 z-40 w-56 bg-card border-r border-border flex flex-col transition-transform duration-200 ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
         }`}
       >
         {/* Logo */}
         <div className="px-5 py-5 border-b border-border flex items-center justify-between">
-          <div className="font-['Barlow_Condensed'] text-2xl font-black tracking-tight text-foreground">
-            STKR<span className="text-primary">.</span>CO
-          </div>
+          <img
+            src="/media/logos/sticker_mandarina.png"
+            alt="MandarinaStore"
+            className="h-7 w-auto"
+          />
           <button
             className="md:hidden text-muted-foreground hover:text-foreground"
             onClick={() => setSidebarOpen(false)}
@@ -73,7 +74,7 @@ export function AdminPanel({ products, categories, onProductsChange, onCategorie
 
         <div className="px-3 py-2 border-b border-border">
           <div className="text-[10px] font-['Barlow_Condensed'] tracking-widest text-muted-foreground uppercase px-2">
-            Admin Panel
+            Panel de Administración
           </div>
         </div>
 
@@ -82,11 +83,14 @@ export function AdminPanel({ products, categories, onProductsChange, onCategorie
           {NAV_ITEMS.map(({ id, label, Icon }) => (
             <button
               key={id}
-              onClick={() => { setView(id); setSidebarOpen(false); }}
+              onClick={() => {
+                setView(id)
+                setSidebarOpen(false)
+              }}
               className={`w-full flex items-center gap-3 px-3 py-2.5 mb-1 transition-all text-sm font-['Barlow_Condensed'] font-600 tracking-wide uppercase ${
                 view === id
-                  ? "bg-primary text-white"
-                  : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                  ? 'bg-primary text-white'
+                  : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
               }`}
             >
               <Icon size={16} />
@@ -103,7 +107,7 @@ export function AdminPanel({ products, categories, onProductsChange, onCategorie
             className="w-full flex items-center gap-3 px-3 py-2.5 text-muted-foreground hover:text-destructive transition-colors text-sm font-['Barlow_Condensed'] uppercase tracking-wide"
           >
             <LogOut size={16} />
-            Logout
+            Cerrar Sesión
           </button>
         </div>
       </aside>
@@ -135,15 +139,13 @@ export function AdminPanel({ products, categories, onProductsChange, onCategorie
             onClick={onLogout}
             className="text-xs font-['Barlow_Condensed'] tracking-widest uppercase text-muted-foreground hover:text-foreground transition-colors hidden md:block"
           >
-            ← BACK TO STORE
+            ← VOLVER A LA TIENDA
           </button>
         </header>
 
         {/* Page content */}
-        <main className="flex-1 p-4 md:p-8">
-          {renderView()}
-        </main>
+        <main className="flex-1 p-4 md:p-8">{renderView()}</main>
       </div>
     </div>
-  );
+  )
 }

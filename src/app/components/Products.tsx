@@ -1,22 +1,23 @@
-import { useState } from "react";
-import { X, ShoppingCart, Plus, Minus, Star } from "lucide-react";
-import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { useState } from 'react'
+import { X, ShoppingCart, Plus, Minus, Star, MessageCircle } from 'lucide-react'
+import { ImageWithFallback } from './ImageWithFallback'
+import { waLink, productMessage } from '../../lib/whatsapp'
 
 export interface Product {
-  id: string;
-  name: string;
-  price: number;
-  category: string;
-  description: string;
-  image: string;
-  rating?: number;
-  reviews?: number;
+  id: string
+  name: string
+  price: number
+  category: string
+  description: string
+  image: string
+  rating?: number
+  reviews?: number
 }
 
 interface ProductsProps {
-  products: Product[];
-  activeCategory: string;
-  onAddToCart: (product: Product) => void;
+  products: Product[]
+  activeCategory: string
+  onAddToCart: (product: Product) => void
 }
 
 function ProductModal({
@@ -24,11 +25,11 @@ function ProductModal({
   onClose,
   onAddToCart,
 }: {
-  product: Product;
-  onClose: () => void;
-  onAddToCart: (p: Product) => void;
+  product: Product
+  onClose: () => void
+  onAddToCart: (p: Product) => void
 }) {
-  const [qty, setQty] = useState(1);
+  const [qty, setQty] = useState(1)
 
   return (
     <div
@@ -73,25 +74,35 @@ function ProductModal({
                     <Star
                       key={i}
                       size={12}
-                      className={i < (product.rating ?? 5) ? "fill-primary text-primary" : "text-muted-foreground"}
+                      className={
+                        i < (product.rating ?? 5)
+                          ? 'fill-primary text-primary'
+                          : 'text-muted-foreground'
+                      }
                     />
                   ))}
                 </div>
-                <span className="text-xs text-muted-foreground">({product.reviews ?? 0} reviews)</span>
+                  <span className="text-xs text-muted-foreground">
+                    ({product.reviews ?? 0} reseñas)
+                  </span>
               </div>
 
-              <p className="text-muted-foreground text-sm leading-relaxed mb-4">{product.description}</p>
+              <p className="text-muted-foreground text-sm leading-relaxed mb-4">
+                {product.description}
+              </p>
 
               {/* Specs */}
               <div className="space-y-2 mb-6 border-t border-border pt-4">
                 {[
-                  { label: "Material", value: "Premium vinyl" },
-                  { label: "Finish", value: "Matte / Glossy" },
-                  { label: "Size", value: "5–10 cm" },
-                  { label: "Waterproof", value: "Yes ✓" },
+                  { label: 'Material', value: 'Vinilo premium' },
+                  { label: 'Acabado', value: 'Mate / Brillante' },
+                  { label: 'Tamaño', value: '5–10 cm' },
+                  { label: 'Impermeable', value: 'Sí ✓' },
                 ].map(({ label, value }) => (
                   <div key={label} className="flex justify-between text-xs">
-                    <span className="text-muted-foreground font-['Barlow_Condensed'] tracking-wider uppercase">{label}</span>
+                    <span className="text-muted-foreground font-['Barlow_Condensed'] tracking-wider uppercase">
+                      {label}
+                    </span>
                     <span className="text-foreground">{value}</span>
                   </div>
                 ))}
@@ -123,29 +134,37 @@ function ProductModal({
 
               <button
                 onClick={() => {
-                  for (let i = 0; i < qty; i++) onAddToCart(product);
-                  onClose();
+                  for (let i = 0; i < qty; i++) onAddToCart(product)
+                  onClose()
                 }}
                 className="w-full bg-primary text-white py-3 font-['Barlow_Condensed'] text-lg font-700 tracking-widest uppercase hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
               >
                 <ShoppingCart size={18} />
-                ADD TO CART
+                AGREGAR AL CARRITO
               </button>
+
+              <a
+                href={waLink(productMessage(product.name, product.price, qty))}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full mt-2 border border-primary text-primary py-3 font-['Barlow_Condensed'] text-base font-700 tracking-widest uppercase hover:bg-primary hover:text-white transition-colors flex items-center justify-center gap-2"
+              >
+                <MessageCircle size={18} />
+                COMPRAR VIA WHATSAPP
+              </a>
             </div>
           </div>
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 export function Products({ products, activeCategory, onAddToCart }: ProductsProps) {
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
 
   const filtered =
-    activeCategory === "all"
-      ? products
-      : products.filter((p) => p.category === activeCategory);
+    activeCategory === 'all' ? products : products.filter((p) => p.category === activeCategory)
 
   return (
     <section id="products" className="py-20 border-t border-border">
@@ -153,16 +172,18 @@ export function Products({ products, activeCategory, onAddToCart }: ProductsProp
         {/* Header */}
         <div className="mb-12">
           <div className="text-xs font-['Barlow_Condensed'] tracking-widest text-primary uppercase mb-2">
-            — THE COLLECTION
+            — LA COLECCIÓN
           </div>
           <h2 className="font-['Barlow_Condensed'] text-4xl md:text-5xl font-900 uppercase leading-none text-foreground">
-            SHOP ALL<br />DESIGNS.
+            TODOS LOS
+            <br />
+            DISEÑOS.
           </h2>
         </div>
 
         {filtered.length === 0 ? (
           <div className="text-center py-20 text-muted-foreground font-['Barlow_Condensed'] text-xl tracking-widest uppercase">
-            No products in this category yet.
+            Aún no hay productos en esta categoría.
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -181,7 +202,7 @@ export function Products({ products, activeCategory, onAddToCart }: ProductsProp
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-200 flex items-center justify-center opacity-0 group-hover:opacity-100">
                     <span className="font-['Barlow_Condensed'] text-sm font-700 tracking-widest text-white bg-primary px-4 py-2 uppercase">
-                      QUICK VIEW
+                      VISTA RÁPIDA
                     </span>
                   </div>
                 </div>
@@ -200,8 +221,8 @@ export function Products({ products, activeCategory, onAddToCart }: ProductsProp
                     </span>
                     <button
                       onClick={(e) => {
-                        e.stopPropagation();
-                        onAddToCart(product);
+                        e.stopPropagation()
+                        onAddToCart(product)
                       }}
                       className="p-2 border border-border hover:bg-primary hover:border-primary hover:text-white transition-all"
                       aria-label={`Add ${product.name} to cart`}
@@ -224,5 +245,5 @@ export function Products({ products, activeCategory, onAddToCart }: ProductsProp
         />
       )}
     </section>
-  );
+  )
 }

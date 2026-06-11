@@ -1,37 +1,38 @@
-import { useState } from "react";
-import { ShoppingCart, Menu, X } from "lucide-react";
+import { useState } from 'react'
+import { ShoppingCart, Menu, X } from 'lucide-react'
 
 interface NavbarProps {
-  cartCount: number;
-  onAdminClick: () => void;
-  onCartClick: () => void;
+  cartCount: number
+  onAdminClick: () => void
+  onCartClick: () => void
 }
 
 export function Navbar({ cartCount, onAdminClick, onCartClick }: NavbarProps) {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false)
 
   const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-    setMenuOpen(false);
-  };
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+    setMenuOpen(false)
+  }
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur border-b border-border">
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-14">
         {/* Logo */}
-        <button
-          onClick={() => scrollTo("hero")}
-          className="font-['Barlow_Condensed'] text-2xl font-black tracking-tight text-foreground hover:text-primary transition-colors"
-        >
-          STKR<span className="text-primary">.</span>CO
+        <button onClick={() => scrollTo('hero')} className="flex items-center">
+          <img
+            src="/media/logos/sticker_mandarina.png"
+            alt="MandarinaStore"
+            className="h-9 md:h-9 w-auto"
+          />
         </button>
 
         {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-8">
           {[
-            { label: "SHOP", id: "products" },
-            { label: "COLLECTIONS", id: "categories" },
-            { label: "REVIEWS", id: "testimonials" },
+            { label: 'TIENDA', id: 'products' },
+            { label: 'COLECCIONES', id: 'categories' },
+            { label: 'RESEÑAS', id: 'testimonials' },
           ].map((item) => (
             <button
               key={item.id}
@@ -77,9 +78,9 @@ export function Navbar({ cartCount, onAdminClick, onCartClick }: NavbarProps) {
       {menuOpen && (
         <div className="md:hidden bg-card border-t border-border px-4 py-4 flex flex-col gap-4">
           {[
-            { label: "SHOP", id: "products" },
-            { label: "COLLECTIONS", id: "categories" },
-            { label: "REVIEWS", id: "testimonials" },
+            { label: 'TIENDA', id: 'products' },
+            { label: 'COLECCIONES', id: 'categories' },
+            { label: 'RESEÑAS', id: 'testimonials' },
           ].map((item) => (
             <button
               key={item.id}
@@ -90,7 +91,10 @@ export function Navbar({ cartCount, onAdminClick, onCartClick }: NavbarProps) {
             </button>
           ))}
           <button
-            onClick={() => { onAdminClick(); setMenuOpen(false); }}
+            onClick={() => {
+              onAdminClick()
+              setMenuOpen(false)
+            }}
             className="text-left font-['Barlow_Condensed'] text-lg font-700 tracking-widest text-muted-foreground hover:text-primary transition-colors"
           >
             ADMIN
@@ -98,5 +102,5 @@ export function Navbar({ cartCount, onAdminClick, onCartClick }: NavbarProps) {
         </div>
       )}
     </nav>
-  );
+  )
 }
