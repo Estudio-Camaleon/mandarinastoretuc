@@ -4,8 +4,6 @@ import { Hero } from './components/Hero'
 import { Categories } from './components/Categories'
 import { Products } from './components/Products'
 import type { Product } from './components/Products'
-import { Testimonials } from './components/Testimonials'
-import { CTA } from './components/CTA'
 import { Footer } from './components/Footer'
 import { CartDrawer } from './components/CartDrawer'
 import { Toaster } from './components/ui/sonner'
@@ -112,10 +110,6 @@ export default function App() {
         />
 
         <Products products={products} activeCategory={activeCategory} onAddToCart={addToCart} />
-
-        <Testimonials />
-
-        <CTA />
 
         <Footer />
 

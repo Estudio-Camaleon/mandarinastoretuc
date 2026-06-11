@@ -6,21 +6,21 @@ export function Footer() {
   }
 
   return (
-    <footer className="border-t border-border bg-card">
-      <div className="max-w-7xl mx-auto px-4 py-12">
+    <footer className="border-t border-border bg-card text-center">
+      <div className="max-w-7xl  px-4 py-12">
         <div className="grid md:grid-cols-4 gap-10 mb-12">
           {/* Brand */}
-          <div className="md:col-span-2">
+          <div className="md:col-span-2 ">
             <img
               src="/media/logos/sticker_mandarina.png"
               alt="MandarinaStore"
-              className="h-10 md:h-12 w-auto mb-3"
+              className="h-25 md:h-25 w-auto mb-3 mx-auto "
             />
-            <p className="text-muted-foreground text-sm max-w-xs leading-relaxed">
+            <p className="text-muted-foreground  text-center leading-relaxed">
               Stickers de vinilo premium para la generación urbana. Diseñados audaces. Hechos para
               durar.
             </p>
-            <div className="flex gap-4 mt-5">
+            <div className="flex gap-4 mt-5 justify-center">
               {[
                 {
                   Icon: Instagram,
