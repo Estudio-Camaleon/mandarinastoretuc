@@ -1,3 +1,9 @@
+## [1.1.0](https://github.com/Estudio-Camaleon/mandarinastoretuc/compare/v1.0.0...v1.1.0) (2026-06-11)
+
+### Features
+
+* actualizar README.md con información sobre la configuración local, scripts y formato de commits ([56d0047](https://github.com/Estudio-Camaleon/mandarinastoretuc/commit/56d0047d2ba3eea3429b9bc7793173f5510e29e5))
+
 ## 1.0.0 (2026-06-11)
 
 ### Features
