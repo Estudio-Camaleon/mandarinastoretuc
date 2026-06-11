@@ -1,3 +1,9 @@
+## [1.1.1](https://github.com/Estudio-Camaleon/mandarinastoretuc/compare/v1.1.0...v1.1.1) (2026-06-11)
+
+### Bug Fixes
+
+* make migrations idempotent (IF NOT EXISTS + ON CONFLICT) ([9112d5c](https://github.com/Estudio-Camaleon/mandarinastoretuc/commit/9112d5cfd4c921855195fa8008916ee39cc3c643))
+
 ## [1.1.0](https://github.com/Estudio-Camaleon/mandarinastoretuc/compare/v1.0.0...v1.1.0) (2026-06-11)
 
 ### Features
