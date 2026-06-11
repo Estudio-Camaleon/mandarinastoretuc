@@ -9,6 +9,7 @@ import { CartDrawer } from './components/CartDrawer'
 import { Toaster } from './components/ui/sonner'
 import { AdminLogin } from './components/admin/AdminLogin'
 import { AdminPanel } from './components/admin/AdminPanel'
+import { supabase } from '../lib/supabase'
 import { fetchProducts, fetchCategories } from '../lib/api'
 import type { Category } from '../lib/database.types'
 
@@ -44,7 +45,19 @@ export default function App() {
   }
 
   useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) setView('admin')
+    })
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session) setView('admin')
+    })
+
     loadData()
+
+    return () => subscription.unsubscribe()
   }, [])
 
   const addToCart = (product: Product) => {
@@ -78,7 +91,10 @@ export default function App() {
           products={products}
           categories={categories}
           onRefresh={loadData}
-          onLogout={() => setView('public')}
+          onLogout={async () => {
+            await supabase.auth.signOut()
+            setView('public')
+          }}
         />
       )
     }

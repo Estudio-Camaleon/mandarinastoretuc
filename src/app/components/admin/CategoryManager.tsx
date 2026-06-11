@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
-import { Plus, Pencil, Trash2, X, AlertTriangle } from 'lucide-react'
+import { Plus, Pencil, Trash2, X, AlertTriangle, ImageIcon } from 'lucide-react'
 import { toast } from 'sonner'
 import type { Product } from '../Products'
 import type { Category } from '../../../lib/database.types'
-import { createCategory, updateCategory, deleteCategory } from '../../../lib/api'
+import { createCategory, updateCategory, deleteCategory, uploadImage } from '../../../lib/api'
 
 interface CategoryManagerProps {
   categories: Category[]
@@ -24,6 +24,9 @@ export function CategoryManager({ categories, products, onRefresh }: CategoryMan
   const [editingId, setEditingId] = useState<string | null>(null)
   const [name, setName] = useState('')
   const [color, setColor] = useState(COLORS[0])
+  const [image, setImage] = useState<string>('')
+  const [imageFile, setImageFile] = useState<File | null>(null)
+  const [uploadingImage, setUploadingImage] = useState(false)
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(false)
@@ -34,6 +37,8 @@ export function CategoryManager({ categories, products, onRefresh }: CategoryMan
   const openAdd = () => {
     setName('')
     setColor(COLORS[0])
+    setImage('')
+    setImageFile(null)
     setEditingId(null)
     setFormDirty(false)
     setErrors({})
@@ -43,6 +48,8 @@ export function CategoryManager({ categories, products, onRefresh }: CategoryMan
   const openEdit = (cat: Category) => {
     setName(cat.name)
     setColor(cat.color)
+    setImage(cat.image ?? '')
+    setImageFile(null)
     setEditingId(cat.id)
     setFormDirty(false)
     setErrors({})
@@ -69,6 +76,17 @@ export function CategoryManager({ categories, products, onRefresh }: CategoryMan
     return Object.keys(errs).length === 0
   }
 
+  const handleImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setImageFile(file)
+    setFormDirty(true)
+    // Show local preview
+    const reader = new FileReader()
+    reader.onload = (ev) => setImage(ev.target?.result as string)
+    reader.readAsDataURL(file)
+  }
+
   const handleSave = async () => {
     if (!name.trim()) return
     const slug = toSlug(name)
@@ -76,12 +94,23 @@ export function CategoryManager({ categories, products, onRefresh }: CategoryMan
 
     setSaving(true)
     try {
+      let imageUrl = image
+      if (imageFile) {
+        setUploadingImage(true)
+        imageUrl = await uploadImage(imageFile)
+        setUploadingImage(false)
+      }
+
+      const payload: Record<string, unknown> = { name: name.trim(), slug, color, image: imageUrl }
+      if (!editingId) {
+        payload.count = products.filter((p) => p.category === slug).length
+      }
+
       if (editingId) {
-        await updateCategory(editingId, { name: name.trim(), slug, color })
+        await updateCategory(editingId, payload)
         toast.success('Categoría actualizada')
       } else {
-        const count = products.filter((p) => p.category === slug).length
-        await createCategory({ name: name.trim(), slug, color, count })
+        await createCategory(payload as Parameters<typeof createCategory>[0])
         toast.success('Categoría creada')
       }
       setShowForm(false)
@@ -91,6 +120,7 @@ export function CategoryManager({ categories, products, onRefresh }: CategoryMan
       console.error(err)
     } finally {
       setSaving(false)
+      setUploadingImage(false)
     }
   }
 
@@ -236,6 +266,31 @@ export function CategoryManager({ categories, products, onRefresh }: CategoryMan
                   <div className="text-[10px] text-destructive mt-1 font-['Barlow_Condensed'] tracking-wider flex items-center gap-1">
                     <AlertTriangle size={10} />
                     {errors.name}
+                  </div>
+                )}
+              </div>
+
+              {/* Image */}
+              <div>
+                <label className="block text-xs font-['Barlow_Condensed'] tracking-widest uppercase text-muted-foreground mb-2">
+                  Imagen de Portada
+                </label>
+                <label className={`flex items-center gap-2 cursor-pointer bg-secondary border border-border px-4 py-3 hover:border-primary/50 transition-colors ${uploadingImage ? 'opacity-50 pointer-events-none' : ''}`}>
+                  <ImageIcon size={16} className="text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground flex-1">
+                    {uploadingImage ? 'Subiendo...' : imageFile ? imageFile.name : image ? 'Cambiar imagen' : 'Seleccionar imagen'}
+                  </span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageSelect}
+                    className="hidden"
+                    disabled={uploadingImage}
+                  />
+                </label>
+                {image && (
+                  <div className="mt-2 w-16 h-16 overflow-hidden rounded border border-border">
+                    <img src={image} alt="Preview" className="w-full h-full object-cover" />
                   </div>
                 )}
               </div>

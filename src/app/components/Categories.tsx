@@ -4,6 +4,7 @@ interface Category {
   slug: string
   color: string
   icon: string
+  image: string
   count: number
 }
 
@@ -76,7 +77,13 @@ export function Categories({ categories, activeCategory, onCategorySelect }: Cat
                   : 'border-border bg-card hover:border-primary/60 hover:bg-secondary'
               }`}
             >
-              <div className="text-3xl mb-2">{cat.icon}</div>
+              {cat.image ? (
+                <div className="w-12 h-12 mb-2 overflow-hidden rounded">
+                  <img src={cat.image} alt={cat.name} className="w-full h-full object-cover" />
+                </div>
+              ) : (
+                <div className="text-3xl mb-2">{cat.icon}</div>
+              )}
               <div className="font-['Barlow_Condensed'] text-sm font-700 tracking-widest uppercase text-foreground">
                 {cat.name}
               </div>

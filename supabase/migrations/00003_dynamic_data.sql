@@ -1,5 +1,6 @@
 -- Add icon column to categories
 alter table public.categories add column if not exists icon text not null default '◆';
+alter table public.categories add column if not exists image text not null default '';
 
 -- Add spec columns to products
 alter table public.products add column if not exists material text not null default 'Vinilo premium';
