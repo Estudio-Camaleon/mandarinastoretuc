@@ -1,3 +1,9 @@
+## [1.3.0](https://github.com/Estudio-Camaleon/mandarinastoretuc/compare/v1.2.0...v1.3.0) (2026-06-11)
+
+### Features
+
+* category image as full-card background ([989dab6](https://github.com/Estudio-Camaleon/mandarinastoretuc/commit/989dab6d5508de571dab5592a95f232d754dad08))
+
 ## [1.2.0](https://github.com/Estudio-Camaleon/mandarinastoretuc/compare/v1.1.6...v1.2.0) (2026-06-11)
 
 ### Features
