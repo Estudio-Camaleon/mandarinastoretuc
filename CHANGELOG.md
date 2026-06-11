@@ -1,3 +1,9 @@
+## [1.1.3](https://github.com/Estudio-Camaleon/mandarinastoretuc/compare/v1.1.2...v1.1.3) (2026-06-11)
+
+### Bug Fixes
+
+* add missing customer_phone column before seed in orders ([f5ce9eb](https://github.com/Estudio-Camaleon/mandarinastoretuc/commit/f5ce9eb48400b77b5b5cbcd64cf9165d26e987c9))
+
 ## [1.1.2](https://github.com/Estudio-Camaleon/mandarinastoretuc/compare/v1.1.1...v1.1.2) (2026-06-11)
 
 ### Bug Fixes
