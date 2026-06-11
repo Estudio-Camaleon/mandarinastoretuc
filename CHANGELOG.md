@@ -1,3 +1,9 @@
+## [1.1.6](https://github.com/Estudio-Camaleon/mandarinastoretuc/compare/v1.1.5...v1.1.6) (2026-06-11)
+
+### Bug Fixes
+
+* footer layout alignment and spacing ([49d30cf](https://github.com/Estudio-Camaleon/mandarinastoretuc/commit/49d30cf0838d0258a8e40eff9a647ef22a09d345))
+
 ## [1.1.5](https://github.com/Estudio-Camaleon/mandarinastoretuc/compare/v1.1.4...v1.1.5) (2026-06-11)
 
 ### Bug Fixes
