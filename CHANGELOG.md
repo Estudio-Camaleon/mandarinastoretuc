@@ -1,3 +1,9 @@
+## [1.2.0](https://github.com/Estudio-Camaleon/mandarinastoretuc/compare/v1.1.6...v1.2.0) (2026-06-11)
+
+### Features
+
+* rounded corners on cards and buttons ([293d1ca](https://github.com/Estudio-Camaleon/mandarinastoretuc/commit/293d1ca0b16cb2b237242e216dcc38db44da5137))
+
 ## [1.1.6](https://github.com/Estudio-Camaleon/mandarinastoretuc/compare/v1.1.5...v1.1.6) (2026-06-11)
 
 ### Bug Fixes
