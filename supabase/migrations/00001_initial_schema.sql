@@ -93,6 +93,10 @@ drop policy if exists "Only authenticated can delete orders" on public.orders;
 create policy "Only authenticated can delete orders"
   on public.orders for delete using (auth.role() = 'authenticated');
 
+-- ── Ensure all columns exist before seeding (safe for existing tables) ──
+alter table public.orders add column if not exists customer_phone text not null default '';
+alter table public.orders add column if not exists notes text not null default '';
+
 -- ── Seed data ────────────────────────────────────────
 
 insert into public.categories (name, slug, color, count) values
