@@ -14,16 +14,20 @@ create table if not exists public.categories (
 alter table public.categories enable row level security;
 
 -- Allow public read, only authenticated can write
-create policy if not exists "Anyone can view categories"
+drop policy if exists "Anyone can view categories" on public.categories;
+create policy "Anyone can view categories"
   on public.categories for select using (true);
 
-create policy if not exists "Only authenticated can insert categories"
+drop policy if exists "Only authenticated can insert categories" on public.categories;
+create policy "Only authenticated can insert categories"
   on public.categories for insert with check (auth.role() = 'authenticated');
 
-create policy if not exists "Only authenticated can update categories"
+drop policy if exists "Only authenticated can update categories" on public.categories;
+create policy "Only authenticated can update categories"
   on public.categories for update using (auth.role() = 'authenticated');
 
-create policy if not exists "Only authenticated can delete categories"
+drop policy if exists "Only authenticated can delete categories" on public.categories;
+create policy "Only authenticated can delete categories"
   on public.categories for delete using (auth.role() = 'authenticated');
 
 -- ── Products ─────────────────────────────────────────
@@ -41,16 +45,20 @@ create table if not exists public.products (
 
 alter table public.products enable row level security;
 
-create policy if not exists "Anyone can view products"
+drop policy if exists "Anyone can view products" on public.products;
+create policy "Anyone can view products"
   on public.products for select using (true);
 
-create policy if not exists "Only authenticated can insert products"
+drop policy if exists "Only authenticated can insert products" on public.products;
+create policy "Only authenticated can insert products"
   on public.products for insert with check (auth.role() = 'authenticated');
 
-create policy if not exists "Only authenticated can update products"
+drop policy if exists "Only authenticated can update products" on public.products;
+create policy "Only authenticated can update products"
   on public.products for update using (auth.role() = 'authenticated');
 
-create policy if not exists "Only authenticated can delete products"
+drop policy if exists "Only authenticated can delete products" on public.products;
+create policy "Only authenticated can delete products"
   on public.products for delete using (auth.role() = 'authenticated');
 
 -- ── Orders ───────────────────────────────────────────
@@ -69,16 +77,20 @@ create table if not exists public.orders (
 
 alter table public.orders enable row level security;
 
-create policy if not exists "Anyone can view orders"
+drop policy if exists "Anyone can view orders" on public.orders;
+create policy "Anyone can view orders"
   on public.orders for select using (true);
 
-create policy if not exists "Only authenticated can insert orders"
+drop policy if exists "Only authenticated can insert orders" on public.orders;
+create policy "Only authenticated can insert orders"
   on public.orders for insert with check (auth.role() = 'authenticated');
 
-create policy if not exists "Only authenticated can update orders"
+drop policy if exists "Only authenticated can update orders" on public.orders;
+create policy "Only authenticated can update orders"
   on public.orders for update using (auth.role() = 'authenticated');
 
-create policy if not exists "Only authenticated can delete orders"
+drop policy if exists "Only authenticated can delete orders" on public.orders;
+create policy "Only authenticated can delete orders"
   on public.orders for delete using (auth.role() = 'authenticated');
 
 -- ── Seed data ────────────────────────────────────────
