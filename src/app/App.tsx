@@ -19,18 +19,21 @@ interface CartItem extends Product {
 
 type AppView = 'public' | 'admin-login' | 'admin'
 
+type AuthState = 'loading' | 'authenticated' | 'unauthenticated'
+
 export default function App() {
   const [view, setView] = useState<AppView>('public')
+  const [authState, setAuthState] = useState<AuthState>('loading')
   const [products, setProducts] = useState<Product[]>([])
   const [categories, setCategories] = useState<Category[]>([])
-  const [loading, setLoading] = useState(true)
+  const [dataLoading, setDataLoading] = useState(true)
   const [activeCategory, setActiveCategory] = useState('all')
   const [cart, setCart] = useState<CartItem[]>([])
   const [cartOpen, setCartOpen] = useState(false)
 
   const loadData = async () => {
     try {
-      setLoading(true)
+      setDataLoading(true)
       const [productsData, categoriesData] = await Promise.all([
         fetchProducts(),
         fetchCategories(),
@@ -40,19 +43,32 @@ export default function App() {
     } catch (err) {
       console.error('Failed to load data:', err)
     } finally {
-      setLoading(false)
+      setDataLoading(false)
     }
   }
 
   useEffect(() => {
+    // Check existing session on mount
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) setView('admin')
+      if (session) {
+        setView('admin')
+        setAuthState('authenticated')
+      } else {
+        setAuthState('unauthenticated')
+      }
     })
 
+    // Listen for auth changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session) setView('admin')
+      if (session) {
+        setView('admin')
+        setAuthState('authenticated')
+      } else {
+        setView('public')
+        setAuthState('unauthenticated')
+      }
     })
 
     loadData()
@@ -99,7 +115,7 @@ export default function App() {
       )
     }
 
-    if (loading) {
+    if (authState === 'loading' || dataLoading) {
       return (
         <div className="min-h-screen bg-background flex items-center justify-center">
           <div className="font-['Barlow_Condensed'] text-lg text-muted-foreground uppercase tracking-widest">
