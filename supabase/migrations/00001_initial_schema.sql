@@ -14,16 +14,16 @@ create table if not exists public.categories (
 alter table public.categories enable row level security;
 
 -- Allow public read, only authenticated can write
-create policy "Anyone can view categories"
+create policy if not exists "Anyone can view categories"
   on public.categories for select using (true);
 
-create policy "Only authenticated can insert categories"
+create policy if not exists "Only authenticated can insert categories"
   on public.categories for insert with check (auth.role() = 'authenticated');
 
-create policy "Only authenticated can update categories"
+create policy if not exists "Only authenticated can update categories"
   on public.categories for update using (auth.role() = 'authenticated');
 
-create policy "Only authenticated can delete categories"
+create policy if not exists "Only authenticated can delete categories"
   on public.categories for delete using (auth.role() = 'authenticated');
 
 -- ── Products ─────────────────────────────────────────
@@ -41,16 +41,16 @@ create table if not exists public.products (
 
 alter table public.products enable row level security;
 
-create policy "Anyone can view products"
+create policy if not exists "Anyone can view products"
   on public.products for select using (true);
 
-create policy "Only authenticated can insert products"
+create policy if not exists "Only authenticated can insert products"
   on public.products for insert with check (auth.role() = 'authenticated');
 
-create policy "Only authenticated can update products"
+create policy if not exists "Only authenticated can update products"
   on public.products for update using (auth.role() = 'authenticated');
 
-create policy "Only authenticated can delete products"
+create policy if not exists "Only authenticated can delete products"
   on public.products for delete using (auth.role() = 'authenticated');
 
 -- ── Orders ───────────────────────────────────────────
@@ -69,16 +69,16 @@ create table if not exists public.orders (
 
 alter table public.orders enable row level security;
 
-create policy "Anyone can view orders"
+create policy if not exists "Anyone can view orders"
   on public.orders for select using (true);
 
-create policy "Only authenticated can insert orders"
+create policy if not exists "Only authenticated can insert orders"
   on public.orders for insert with check (auth.role() = 'authenticated');
 
-create policy "Only authenticated can update orders"
+create policy if not exists "Only authenticated can update orders"
   on public.orders for update using (auth.role() = 'authenticated');
 
-create policy "Only authenticated can delete orders"
+create policy if not exists "Only authenticated can delete orders"
   on public.orders for delete using (auth.role() = 'authenticated');
 
 -- ── Seed data ────────────────────────────────────────
@@ -87,7 +87,8 @@ insert into public.categories (name, slug, color, count) values
   ('Anime',      'anime',      '#a855f7', 2),
   ('Nature',     'nature',     '#22c55e', 2),
   ('Animals',    'animals',    '#3b82f6', 2),
-  ('Retro',      'retro',      '#ec4899', 2);
+  ('Retro',      'retro',      '#ec4899', 2)
+on conflict (slug) do nothing;
 
 insert into public.products (name, price, category, description, image, rating, reviews) values
   ('Neon Wolf',       4.99, 'animals',    'A bold neon wolf design with electric blue highlights. Perfect for helmets, laptops, and water bottles. Weatherproof and UV-resistant.',     'https://images.unsplash.com/photo-1770375142184-4655d2bd2d4e?w=400&h=400&fit=crop&auto=format', 5, 47),
@@ -105,7 +106,8 @@ insert into public.orders (order_number, customer_name, customer_phone, product_
   ('#1040', 'Jordan L.',    '5491123456703', 'Street Tag Vol.2',      3, 'delivered', 11.97, 'Left at reception.'),
   ('#1039', 'Mia Torres',   '5491123456704', 'Anime Eyes',            1, 'delivered',  4.99,  ''),
   ('#1038', 'Alex K.',      '5491123456705', 'Bear Club Sticker',     2, 'delivered',  7.98,  ''),
-  ('#1037', 'James W.',     '5491123456706', 'Retro Vibes Pack',      1, 'confirmed', 12.99, 'Waiting for payment confirmation.');
+  ('#1037', 'James W.',     '5491123456706', 'Retro Vibes Pack',      1, 'confirmed', 12.99, 'Waiting for payment confirmation.')
+on conflict (order_number) do nothing;
 
 -- ── Storage bucket for product images ──────────────────
 -- Run this in the Supabase SQL Editor to create the bucket:
