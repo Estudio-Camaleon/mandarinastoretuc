@@ -1,3 +1,9 @@
+## [1.1.5](https://github.com/Estudio-Camaleon/mandarinastoretuc/compare/v1.1.4...v1.1.5) (2026-06-11)
+
+### Bug Fixes
+
+* persist admin session on page refresh ([f578d9d](https://github.com/Estudio-Camaleon/mandarinastoretuc/commit/f578d9db556b571ca6208608a36ca9841f35a5ff))
+
 ## [1.1.4](https://github.com/Estudio-Camaleon/mandarinastoretuc/compare/v1.1.3...v1.1.4) (2026-06-11)
 
 ### Bug Fixes
