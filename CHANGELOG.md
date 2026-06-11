@@ -1,3 +1,9 @@
+## [1.1.2](https://github.com/Estudio-Camaleon/mandarinastoretuc/compare/v1.1.1...v1.1.2) (2026-06-11)
+
+### Bug Fixes
+
+* use drop+create policy instead of unsupported IF NOT EXISTS ([7a27578](https://github.com/Estudio-Camaleon/mandarinastoretuc/commit/7a27578729771e1d000e0f65e4e7ba667937338b))
+
 ## [1.1.1](https://github.com/Estudio-Camaleon/mandarinastoretuc/compare/v1.1.0...v1.1.1) (2026-06-11)
 
 ### Bug Fixes
