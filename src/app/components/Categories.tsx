@@ -42,7 +42,7 @@ export function Categories({ categories, activeCategory, onCategorySelect }: Cat
         <div className="flex flex-wrap gap-3 mb-8">
           <button
             onClick={() => onCategorySelect('all')}
-            className={`px-5 py-2 font-['Barlow_Condensed'] text-sm font-700 tracking-widest uppercase transition-all border ${
+            className={`px-5 py-2 font-['Barlow_Condensed'] text-sm font-700 tracking-widest uppercase transition-all border rounded-md ${
               activeCategory === 'all'
                 ? 'bg-primary text-white border-primary'
                 : 'bg-transparent text-muted-foreground border-border hover:border-primary hover:text-foreground'
@@ -54,7 +54,7 @@ export function Categories({ categories, activeCategory, onCategorySelect }: Cat
             <button
               key={cat.id}
               onClick={() => onCategorySelect(cat.slug)}
-              className={`px-5 py-2 font-['Barlow_Condensed'] text-sm font-700 tracking-widest uppercase transition-all border ${
+              className={`px-5 py-2 font-['Barlow_Condensed'] text-sm font-700 tracking-widest uppercase transition-all border rounded-md ${
                 activeCategory === cat.slug
                   ? 'bg-primary text-white border-primary'
                   : 'bg-transparent text-muted-foreground border-border hover:border-primary hover:text-foreground'
@@ -71,7 +71,7 @@ export function Categories({ categories, activeCategory, onCategorySelect }: Cat
             <button
               key={cat.id}
               onClick={() => onCategorySelect(cat.slug)}
-              className={`group relative aspect-square flex flex-col items-center justify-center border transition-all duration-200 ${
+              className={`group relative aspect-square flex flex-col items-center justify-center border transition-all duration-200 rounded-xl ${
                 activeCategory === cat.slug
                   ? 'border-primary bg-primary/10'
                   : 'border-border bg-card hover:border-primary/60 hover:bg-secondary'

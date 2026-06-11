@@ -56,7 +56,7 @@ export function CartDrawer({ items, onClose, onRemove, onUpdateQty }: CartDrawer
             </div>
           ) : (
             items.map((item) => (
-              <div key={item.id} className="flex gap-3 border border-border p-3">
+              <div key={item.id} className="flex gap-3 border border-border p-3 rounded-lg">
                 <div className="w-16 h-16 bg-secondary flex-shrink-0 overflow-hidden">
                   <ImageWithFallback
                     src={item.image}
@@ -74,7 +74,7 @@ export function CartDrawer({ items, onClose, onRemove, onUpdateQty }: CartDrawer
                   <div className="flex items-center gap-2 mt-2">
                     <button
                       onClick={() => onUpdateQty(item.id, Math.max(1, item.qty - 1))}
-                      className="w-6 h-6 border border-border flex items-center justify-center text-xs hover:bg-secondary transition-colors"
+                      className="w-6 h-6 border border-border flex items-center justify-center text-xs hover:bg-secondary transition-colors rounded-sm"
                     >
                       −
                     </button>
@@ -83,7 +83,7 @@ export function CartDrawer({ items, onClose, onRemove, onUpdateQty }: CartDrawer
                     </span>
                     <button
                       onClick={() => onUpdateQty(item.id, item.qty + 1)}
-                      className="w-6 h-6 border border-border flex items-center justify-center text-xs hover:bg-secondary transition-colors"
+                      className="w-6 h-6 border border-border flex items-center justify-center text-xs hover:bg-secondary transition-colors rounded-sm"
                     >
                       +
                     </button>
@@ -115,14 +115,14 @@ export function CartDrawer({ items, onClose, onRemove, onUpdateQty }: CartDrawer
               href={waLink(cartMessage(items))}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full bg-primary text-white py-3 font-['Barlow_Condensed'] text-lg font-700 tracking-widest uppercase hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
+              className="w-full bg-primary text-white py-3 font-['Barlow_Condensed'] text-lg font-700 tracking-widest uppercase hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 rounded-md"
             >
               <WhatsAppIcon size={18} />
               ENVIAR VIA WHATSAPP →
             </a>
             <button
               onClick={onClose}
-              className="w-full mt-2 border border-border text-muted-foreground py-2 font-['Barlow_Condensed'] text-sm font-700 tracking-widest uppercase hover:border-foreground hover:text-foreground transition-colors"
+              className="w-full mt-2 border border-border text-muted-foreground py-2 font-['Barlow_Condensed'] text-sm font-700 tracking-widest uppercase hover:border-foreground hover:text-foreground transition-colors rounded-md"
             >
               SEGUIR COMPRANDO
             </button>

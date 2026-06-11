@@ -55,7 +55,7 @@ export function Testimonials() {
           {TESTIMONIALS.map((t) => (
             <div
               key={t.id}
-              className="bg-card border border-border p-5 flex flex-col justify-between hover:border-primary/40 transition-colors"
+              className="bg-card border border-border p-5 flex flex-col justify-between hover:border-primary/40 transition-colors rounded-xl"
             >
               <div>
                 <div className="flex mb-3">
@@ -83,7 +83,7 @@ export function Testimonials() {
         </div>
 
         {/* Social proof bar */}
-        <div className="mt-10 border border-border p-5 grid grid-cols-2 md:grid-cols-4 gap-5 bg-card">
+        <div className="mt-10 border border-border p-5 grid grid-cols-2 md:grid-cols-4 gap-5 bg-card rounded-xl">
           {[
             { emoji: '⭐', value: '4.9 / 5', label: 'Valoración media' },
             { emoji: '📦', value: '10,000+', label: 'Clientes felices' },

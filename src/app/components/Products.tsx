@@ -42,7 +42,7 @@ function ProductModal({
       onClick={onClose}
     >
       <div
-        className="relative bg-card border border-border max-w-2xl w-full overflow-hidden"
+        className="relative bg-card border border-border max-w-2xl w-full overflow-hidden rounded-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -117,7 +117,7 @@ function ProductModal({
             <div>
               {/* Qty + price */}
               <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center border border-border">
+                <div className="flex items-center border border-border rounded-md overflow-hidden">
                   <button
                     onClick={() => setQty(Math.max(1, qty - 1))}
                     className="p-2 hover:bg-secondary transition-colors"
@@ -142,7 +142,7 @@ function ProductModal({
                   for (let i = 0; i < qty; i++) onAddToCart(product)
                   onClose()
                 }}
-                className="w-full bg-primary text-white py-3 font-['Barlow_Condensed'] text-lg font-700 tracking-widest uppercase hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
+                className="w-full bg-primary text-white py-3 font-['Barlow_Condensed'] text-lg font-700 tracking-widest uppercase hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 rounded-md"
               >
                 <ShoppingCart size={18} />
                 AGREGAR AL CARRITO
@@ -152,7 +152,7 @@ function ProductModal({
                 href={waLink(productMessage(product.name, product.price, qty))}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full mt-2 border border-primary text-primary py-3 font-['Barlow_Condensed'] text-base font-700 tracking-widest uppercase hover:bg-primary hover:text-white transition-colors flex items-center justify-center gap-2"
+                className="w-full mt-2 border border-primary text-primary py-3 font-['Barlow_Condensed'] text-base font-700 tracking-widest uppercase hover:bg-primary hover:text-white transition-colors flex items-center justify-center gap-2 rounded-md"
               >
                 <WhatsAppIcon size={18} />
                 COMPRAR VIA WHATSAPP
@@ -195,7 +195,7 @@ export function Products({ products, activeCategory, onAddToCart }: ProductsProp
             {filtered.map((product) => (
               <div
                 key={product.id}
-                className="group bg-card border border-border hover:border-primary/60 transition-all duration-200 cursor-pointer"
+                className="group bg-card border border-border hover:border-primary/60 transition-all duration-200 cursor-pointer rounded-xl overflow-hidden"
                 onClick={() => setSelectedProduct(product)}
               >
                 {/* Image */}
@@ -206,7 +206,7 @@ export function Products({ products, activeCategory, onAddToCart }: ProductsProp
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-200 flex items-center justify-center opacity-0 group-hover:opacity-100">
-                    <span className="font-['Barlow_Condensed'] text-sm font-700 tracking-widest text-white bg-primary px-4 py-2 uppercase">
+                    <span className="font-['Barlow_Condensed'] text-sm font-700 tracking-widest text-white bg-primary px-4 py-2 uppercase rounded-md">
                       VISTA RÁPIDA
                     </span>
                   </div>
@@ -229,7 +229,7 @@ export function Products({ products, activeCategory, onAddToCart }: ProductsProp
                         e.stopPropagation()
                         onAddToCart(product)
                       }}
-                      className="p-2 border border-border hover:bg-primary hover:border-primary hover:text-white transition-all"
+                      className="p-2 border border-border hover:bg-primary hover:border-primary hover:text-white transition-all rounded-md"
                       aria-label={`Add ${product.name} to cart`}
                     >
                       <ShoppingCart size={14} />
