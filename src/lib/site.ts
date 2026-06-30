@@ -54,24 +54,31 @@ export const MATERIALS = [
 /* ── Design categories (can have cover images) ─────── */
 export const DESIGN_CATEGORIES = [
   { slug: 'anime', name: 'Anime', image: './media/categoria/diseños/Conjunto_anime.webp' },
-  { slug: 'comic', name: 'Comic', image: '' },
-  { slug: 'caricaturas', name: 'Caricaturas', image: '' },
-  { slug: 'musica', name: 'Música', image: '' },
+  { slug: 'comic', name: 'Comic', image: './media/categoria/diseños/Conjunto_comic_1.png' },
+  {
+    slug: 'caricaturas',
+    name: 'Caricaturas',
+    image: './media/categoria/diseños/Conjunto_dibujos_animados.png',
+  },
+  { slug: 'musica', name: 'Música', image: './media/categoria/diseños/Conjunto_musica.webp' },
   { slug: 'deportes', name: 'Deportes', image: '' },
-  { slug: 'videojuegos', name: 'Videojuegos', image: '' },
-  { slug: 'peliculas', name: 'Películas', image: '' },
+  { slug: 'videojuegos', name: 'Videojuegos', image: './media/categoria/diseños/Conjunto_videojuego.webp' },
+  { slug: 'peliculas', name: 'Películas', image: './media/categoria/diseños/Conjunto_peliculas.webp' },
+  { slug: 'ticket', name: 'Ticket', image: './media/categoria/diseños/Conjunto_tickets.png' },
   { slug: 'naturaleza', name: 'Naturaleza', image: '' },
   { slug: 'animales', name: 'Animales', image: '' },
-  { slug: 'frase-texto', name: 'Frase/Texto', image: '' },
+  {
+    slug: 'argentina',
+    name: 'Argentina',
+    image: './media/categoria/diseños/Conjunto_argentina.png',
+  },
   { slug: 'personalizado', name: 'Personalizado', image: '' },
   { slug: 'otro', name: 'Otro', image: '' },
 ]
 
 export function findCategory(name: string): (typeof DESIGN_CATEGORIES)[number] | undefined {
   const lower = name.toLowerCase()
-  return DESIGN_CATEGORIES.find(
-    (c) => c.slug === lower || c.name.toLowerCase() === lower,
-  )
+  return DESIGN_CATEGORIES.find((c) => c.slug === lower || c.name.toLowerCase() === lower)
 }
 
 /* Normalize any material value (slug or display name) to its slug */
