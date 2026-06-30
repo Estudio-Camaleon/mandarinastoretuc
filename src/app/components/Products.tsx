@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from 'react'
-import { X, Star, Instagram } from 'lucide-react'
+import { X, Star, Instagram, Share2, Info } from 'lucide-react'
 import { ImageWithFallback } from './ImageWithFallback'
 import { WhatsAppIcon } from './WhatsAppIcon'
 import { waLink, productInquiryMessage } from '../../lib/whatsapp'
+import { toMaterialSlug } from '../../lib/site'
 
 const INSTAGRAM_URL = 'https://www.instagram.com/mandarina.store.tuc/'
 
@@ -23,8 +24,11 @@ export interface Product {
 
 interface ProductsProps {
   products: Product[]
-  activeCategory: string
+  activeMaterial: string
+  activeCategory: string | null
 }
+
+/* ── Full detail modal (opened from "VER INFO") ── */
 
 function ProductModal({ product, onClose }: { product: Product; onClose: () => void }) {
   return (
@@ -33,7 +37,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
       onClick={onClose}
     >
       <div
-        className="relative bg-card border border-border max-w-2xl w-full overflow-y-auto max-h-[90dvh] md:max-h-[85vh] rounded-t-xl md:rounded-xl"
+        className="relative bg-card border border-border max-w-2xl w-full overflow-y-auto max-h-[90dvh] md:max-h-[85vh] rounded-t-xl md:rounded-3xl"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -44,26 +48,23 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
         </button>
 
         <div className="md:grid md:grid-cols-2">
-          {/* Image */}
-          <div className="bg-secondary aspect-square">
+          <div className="bg-secondary flex items-center justify-center p-6">
             <ImageWithFallback
               src={product.image}
               alt={product.name}
-              className="w-full h-full object-cover"
+              className="w-full h-full max-h-[50vh] md:max-h-[70vh] object-contain"
             />
           </div>
 
-          {/* Details */}
           <div className="p-5 md:p-6 flex flex-col justify-between">
             <div>
-              <div className="text-xs font-['Barlow_Condensed'] tracking-widest text-primary uppercase mb-2">
+              <div className="text-xs font-['Fredoka'] tracking-widest text-primary uppercase mb-2">
                 {product.category}
               </div>
-              <h3 className="font-['Barlow_Condensed'] text-2xl md:text-3xl font-900 uppercase leading-tight text-foreground mb-3">
+              <h3 className="font-['Fredoka'] text-2xl md:text-3xl font-900 uppercase leading-tight text-foreground mb-3">
                 {product.name}
               </h3>
 
-              {/* Rating */}
               <div className="flex items-center gap-2 mb-4">
                 <div className="flex">
                   {Array.from({ length: 5 }).map((_, i) => (
@@ -87,7 +88,6 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
                 {product.description}
               </p>
 
-              {/* Specs */}
               <div className="space-y-2 mb-6 border-t border-border pt-4">
                 {[
                   { label: 'Material', value: product.material },
@@ -96,7 +96,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
                   { label: 'Impermeable', value: product.waterproof ? 'Sí ✓' : 'No' },
                 ].map(({ label, value }) => (
                   <div key={label} className="flex justify-between text-xs">
-                    <span className="text-muted-foreground font-['Barlow_Condensed'] tracking-wider uppercase">
+                    <span className="text-muted-foreground font-['Fredoka'] tracking-wider uppercase">
                       {label}
                     </span>
                     <span className="text-foreground">{value}</span>
@@ -106,7 +106,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
             </div>
 
             <div className="space-y-2">
-              <div className="font-['Barlow_Condensed'] text-3xl font-900 text-primary">
+              <div className="font-['Fredoka'] text-3xl font-900 text-primary">
                 ${product.price.toFixed(2)}
               </div>
 
@@ -114,7 +114,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
                 href={waLink(productInquiryMessage(product.name, product.price))}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full bg-primary text-white py-3 font-['Barlow_Condensed'] text-base md:text-lg font-700 tracking-widest uppercase hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 rounded-md"
+                className="w-full bg-primary text-white py-3 font-['Fredoka'] text-base md:text-lg font-700 tracking-widest uppercase hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 rounded-xl"
               >
                 <WhatsAppIcon size={18} />
                 CONSULTAR POR WHATSAPP
@@ -124,7 +124,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
                 href={INSTAGRAM_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full border border-border text-muted-foreground py-3 font-['Barlow_Condensed'] text-base md:text-lg font-700 tracking-widest uppercase hover:border-foreground hover:text-foreground transition-colors flex items-center justify-center gap-2 rounded-md"
+                className="w-full border border-border text-muted-foreground py-3 font-['Fredoka'] text-base md:text-lg font-700 tracking-widest uppercase hover:border-foreground hover:text-foreground transition-colors flex items-center justify-center gap-2 rounded-xl"
               >
                 <Instagram size={18} />
                 CONSULTAR POR INSTAGRAM
@@ -136,6 +136,111 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
     </div>
   )
 }
+
+/* ── Action bubble (appears on card click) ── */
+
+function ActionBubble({
+  product,
+  onViewInfo,
+  onClose,
+}: {
+  product: Product
+  onViewInfo: () => void
+  onClose: () => void
+}) {
+  const handleShare = async () => {
+    const text = `${product.name} — $${product.price.toFixed(2)}\n${product.description}\n\n${INSTAGRAM_URL}`
+    if (navigator.share) {
+      await navigator.share({ title: product.name, text }).catch(() => {})
+    } else {
+      await navigator.clipboard.writeText(text)
+    }
+    onClose()
+  }
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-end md:items-center justify-center p-0 md:p-4 bg-black/60 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <div
+        className="relative w-full max-w-xs mx-0 md:mx-auto bg-card border border-border rounded-t-2xl md:rounded-[20px] shadow-2xl overflow-hidden animate-fade-in"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Product preview */}
+        <div className="flex items-center gap-3 p-4 border-b border-border">
+          <div className="w-14 h-14 bg-secondary rounded-2xl overflow-hidden shrink-0">
+            <ImageWithFallback
+              src={product.image}
+              alt={product.name}
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <div className="min-w-0">
+            <div className="text-[10px] font-['Fredoka'] tracking-widest text-primary uppercase truncate">
+              {product.category}
+            </div>
+            <div className="font-['Fredoka'] text-sm font-700 uppercase text-foreground truncate">
+              {product.name}
+            </div>
+            <div className="font-['Fredoka'] text-base font-900 text-primary">
+              ${product.price.toFixed(2)}
+            </div>
+          </div>
+        </div>
+
+        {/* Actions */}
+        <div className="p-2">
+          <button
+            onClick={() => { onViewInfo(); onClose() }}
+            className="w-full flex items-center gap-3 px-3 py-3 text-sm text-foreground hover:bg-secondary/50 transition-colors rounded-2xl"
+          >
+            <Info size={18} className="text-muted-foreground shrink-0" />
+            <span className="font-['Fredoka'] tracking-wider uppercase text-sm">Ver info</span>
+          </button>
+
+          <a
+            href={waLink(productInquiryMessage(product.name, product.price))}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full flex items-center gap-3 px-3 py-3 text-sm text-foreground hover:bg-secondary/50 transition-colors rounded-2xl"
+          >
+            <WhatsAppIcon size={18} className="text-muted-foreground shrink-0" />
+            <span className="font-['Fredoka'] tracking-wider uppercase text-sm">Comprar</span>
+          </a>
+
+          <a
+            href={INSTAGRAM_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full flex items-center gap-3 px-3 py-3 text-sm text-foreground hover:bg-secondary/50 transition-colors rounded-2xl"
+          >
+            <Instagram size={18} className="text-muted-foreground shrink-0" />
+            <span className="font-['Fredoka'] tracking-wider uppercase text-sm">Instagram</span>
+          </a>
+
+          <button
+            onClick={handleShare}
+            className="w-full flex items-center gap-3 px-3 py-3 text-sm text-foreground hover:bg-secondary/50 transition-colors rounded-2xl"
+          >
+            <Share2 size={18} className="text-muted-foreground shrink-0" />
+            <span className="font-['Fredoka'] tracking-wider uppercase text-sm">Compartir</span>
+          </button>
+        </div>
+
+        {/* Close */}
+        <button
+          onClick={onClose}
+          className="w-full border-t border-border py-3 text-xs font-['Fredoka'] tracking-widest uppercase text-muted-foreground hover:text-foreground transition-colors"
+        >
+          Cerrar
+        </button>
+      </div>
+    </div>
+  )
+}
+
+/* ── Individual product card ── */
 
 function ProductCard({
   product,
@@ -204,69 +309,73 @@ function ProductCard({
       className="animate-fade-in"
       style={{ animationDelay: `${index * 0.05}s` }}
     >
-    <div
-      ref={cardRef}
-      className="group bg-card border border-border active:border-primary/60 cursor-pointer rounded-xl overflow-hidden sticker-card"
-      onClick={onSelect}
-      {...(!isMobile ? { onMouseMove: handleMouseMove, onMouseLeave: handleMouseLeave } : {})}
-    >
-      <div className="relative aspect-square overflow-hidden bg-secondary">
-        <div className="sticker-content">
+      <div
+        ref={cardRef}
+        className="group cursor-pointer sticker-card"
+        onClick={onSelect}
+        {...(!isMobile ? { onMouseMove: handleMouseMove, onMouseLeave: handleMouseLeave } : {})}
+      >
+        {/* Image — just the shape, no background */}
+        <div className="relative sticker-content">
           <ImageWithFallback
             src={product.image}
             alt={product.name}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-contain aspect-[4/5]"
           />
+          <div ref={shineRef} className="sticker-shine" style={maskStyle} />
+          {isHolo && <div ref={holoRef} className="sticker-holo" style={maskStyle} />}
+          {/* Touch/click hint */}
+          <div className="absolute inset-0 group-active:bg-black/5 md:group-hover:bg-black/5 transition-all duration-200 flex items-center justify-center opacity-0 group-active:opacity-100 md:group-hover:opacity-100 pointer-events-none">
+            <span className="font-['Fredoka'] text-xs font-700 tracking-widest text-white bg-primary/80 px-3 py-1.5 uppercase rounded-lg">
+              VER MÁS
+            </span>
+          </div>
         </div>
-        <div ref={shineRef} className="sticker-shine" style={maskStyle} />
-        {isHolo && <div ref={holoRef} className="sticker-holo" style={maskStyle} />}
-        {/* Overlay visible on hover (desktop) and on tap (mobile) */}
-        <div className="absolute inset-0 bg-black/0 group-active:bg-black/20 md:group-hover:bg-black/20 transition-all duration-200 flex items-center justify-center opacity-0 group-active:opacity-100 md:group-hover:opacity-100 pointer-events-none">
-          <span className="font-['Barlow_Condensed'] text-sm font-700 tracking-widest text-white bg-primary px-4 py-2 uppercase rounded-md">
-            VISTA RÁPIDA
-          </span>
-        </div>
-      </div>
 
-      <div className="p-2.5 md:p-3">
-        <div className="text-[10px] font-['Barlow_Condensed'] tracking-widest text-primary uppercase mb-1 truncate">
-          {product.category}
-        </div>
-        <h3 className="font-['Barlow_Condensed'] text-sm md:text-base font-700 uppercase leading-tight text-foreground mb-2 line-clamp-1">
-          {product.name}
-        </h3>
-        <div className="font-['Barlow_Condensed'] text-base md:text-lg font-900 text-primary">
-          ${product.price.toFixed(2)}
+        {/* Info */}
+        <div className="pt-1.5 md:pt-2">
+          <div className="text-[10px] font-['Fredoka'] tracking-widest text-primary uppercase truncate">
+            {product.category}
+          </div>
+          <h3 className="font-['Fredoka'] text-sm md:text-base font-700 uppercase leading-tight text-foreground truncate">
+            {product.name}
+          </h3>
+          <div className="font-['Fredoka'] text-base md:text-lg font-900 text-primary">
+            ${product.price.toFixed(2)}
+          </div>
         </div>
       </div>
-    </div>
     </div>
   )
 }
 
-export function Products({ products, activeCategory }: ProductsProps) {
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
+/* ── Products section ── */
 
-  const filtered =
-    activeCategory === 'all' ? products : products.filter((p) => p.category === activeCategory)
+export function Products({ products, activeMaterial, activeCategory }: ProductsProps) {
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
+  const [showInfoFor, setShowInfoFor] = useState<Product | null>(null)
+
+  const filtered = products.filter((p) => {
+    if (activeMaterial !== 'all' && toMaterialSlug(p.material) !== activeMaterial) return false
+    if (activeCategory && p.category !== activeCategory) return false
+    return true
+  })
 
   return (
     <section id="products" className="scroll-mt-20 pt-16 md:pt-28 pb-16 md:pb-20 border-t border-border">
       <div className="max-w-7xl mx-auto px-4">
         {/* Header */}
         <div className="mb-10 md:mb-14 space-y-3">
-          <div className="text-xs font-['Barlow_Condensed'] tracking-widest text-primary uppercase">
+          <div className="text-xs font-['Fredoka'] tracking-widest text-primary uppercase">
             — LA COLECCIÓN
           </div>
-          <h2 className="font-['Barlow_Condensed'] text-4xl sm:text-5xl md:text-6xl font-900 uppercase leading-none text-foreground text-center">
+          <h2 className="font-['Fredoka'] text-4xl sm:text-5xl md:text-6xl font-900 uppercase leading-none text-foreground text-center">
             TODOS LOS DISEÑOS.
-            
-           
           </h2>
         </div>
 
         {filtered.length === 0 ? (
-          <div className="text-center py-20 text-muted-foreground font-['Barlow_Condensed'] text-xl tracking-widest uppercase animate-fade-in">
+          <div className="text-center py-20 text-muted-foreground font-['Fredoka'] text-xl tracking-widest uppercase animate-fade-in">
             Aún no hay productos en esta categoría.
           </div>
         ) : (
@@ -283,10 +392,20 @@ export function Products({ products, activeCategory }: ProductsProps) {
         )}
       </div>
 
-      {selectedProduct && (
-        <ProductModal
+      {/* Action bubble */}
+      {selectedProduct && !showInfoFor && (
+        <ActionBubble
           product={selectedProduct}
+          onViewInfo={() => setShowInfoFor(selectedProduct)}
           onClose={() => setSelectedProduct(null)}
+        />
+      )}
+
+      {/* Full detail modal */}
+      {showInfoFor && (
+        <ProductModal
+          product={showInfoFor}
+          onClose={() => { setShowInfoFor(null); setSelectedProduct(null) }}
         />
       )}
     </section>

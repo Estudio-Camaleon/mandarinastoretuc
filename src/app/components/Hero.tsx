@@ -8,8 +8,6 @@ const SOCIAL_ICONS: Record<string, React.ComponentType<{ size?: number; classNam
   WhatsApp: ({ size, className }) => <WhatsAppIcon size={size ?? 18} className={className} />,
 }
 
-const DECORATIVE_LINE = 'M0 0 L50 25 L100 0'
-
 export function Hero() {
   const scrollToProducts = () => {
     document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' })
@@ -31,28 +29,25 @@ export function Hero() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 w-full">
         <div className="flex flex-col items-center text-center max-w-3xl mx-auto gap-6 md:gap-8 py-10 md:py-20">
-          {/* Big logo */}
-          <div className="animate-fade-in">
-            <img
-              src={LOGO_PATH}
-              alt="Mandarina Store"
-              className="h-32 sm:h-40 md:h-52 lg:h-64 w-auto"
-            />
+          {/* Logo + title overlay */}
+          <div className="relative flex items-center justify-center py-4 md:py-8">
+            <div className="animate-gentle-bounce">
+              <img
+                src={LOGO_PATH}
+                alt="Mandarina Store"
+                className="h-32 sm:h-40 md:h-52 lg:h-64 w-auto"
+              />
+            </div>
+
+            {/* Rainbow title arching over the logo */}
+            <h1 className="absolute inset-0 flex flex-col items-center justify-center gap-0 sm:gap-1 md:gap-2 pointer-events-none
+              bg-gradient-to-b from-red-500 via-yellow-500 via-green-500 via-blue-500 to-purple-500 bg-clip-text text-transparent
+              font-['Fredoka'] text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-900 uppercase leading-none tracking-tight text-center">
+              <span className="drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]">PEGA TU</span>
+              <span className="drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]">ESTILO</span>
+              <span className="drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]">EN TODAS PARTES.</span>
+            </h1>
           </div>
-
-          {/* Decorative divider */}
-          <svg viewBox="0 0 100 12" className="w-32 h-3 text-primary/40">
-            <path d={DECORATIVE_LINE} stroke="currentColor" strokeWidth="1.5" fill="none" />
-          </svg>
-
-          {/* Headline */}
-          <h1 className="font-['Barlow_Condensed'] text-5xl sm:text-7xl lg:text-8xl font-900 leading-none uppercase tracking-tight text-foreground">
-            PEGA TU
-            <br />
-            <span className="text-primary">ESTILO</span>
-            <br />
-            EN TODAS PARTES.
-          </h1>
 
           {/* Subtitle */}
           <p className="text-muted-foreground max-w-md leading-relaxed text-sm md:text-base">
@@ -63,7 +58,7 @@ export function Hero() {
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 pt-2">
             <button
               onClick={scrollToProducts}
-              className="bg-primary text-white px-8 sm:px-10 py-3 font-['Barlow_Condensed'] text-base sm:text-lg font-700 tracking-widest uppercase hover:bg-primary/90 transition-colors text-center"
+              className="bg-primary text-white px-8 sm:px-10 py-3 font-['Fredoka'] text-base sm:text-lg font-700 tracking-widest uppercase hover:bg-primary/90 transition-colors text-center"
             >
               COMPRAR AHORA
             </button>
@@ -71,7 +66,7 @@ export function Hero() {
               onClick={() =>
                 document.getElementById('categories')?.scrollIntoView({ behavior: 'smooth' })
               }
-              className="border border-border text-foreground px-8 sm:px-10 py-3 font-['Barlow_Condensed'] text-base sm:text-lg font-700 tracking-widest uppercase hover:border-primary hover:text-primary transition-colors text-center"
+              className="border border-border text-foreground px-8 sm:px-10 py-3 font-['Fredoka'] text-base sm:text-lg font-700 tracking-widest uppercase hover:border-primary hover:text-primary transition-colors text-center"
             >
               COLECCIONES
             </button>
@@ -79,7 +74,7 @@ export function Hero() {
 
           {/* Social icons */}
           <div className="flex items-center gap-4 pt-4">
-            <span className="text-xs md:text-sm font-['Barlow_Condensed'] tracking-widest text-muted-foreground uppercase">
+            <span className="text-xs md:text-sm font-['Fredoka'] tracking-widest text-muted-foreground uppercase">
               Seguinos
             </span>
             <div className="w-8 h-px bg-border" />

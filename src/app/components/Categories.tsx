@@ -1,84 +1,359 @@
+import { useRef, useState, useEffect, useMemo } from 'react'
 import { Disc3, Sparkles, Tag, Gem } from 'lucide-react'
+import { ImageWithFallback } from './ImageWithFallback'
+import { toMaterialSlug, DESIGN_CATEGORIES } from '../../lib/site'
 
-const FIXED_CATEGORIES = [
+const MATERIALS = [
   {
     slug: 'vinilos',
     name: 'Papel Vinilo',
     Icon: Disc3,
-    gradient: 'from-violet-700 to-indigo-950',
-    activeBorder: 'border-violet-500',
     btnActive: 'bg-violet-600 text-white border-violet-600',
     btnInactive:
       'bg-transparent border-border text-muted-foreground md:hover:border-violet-500 md:hover:text-violet-200',
     sub: 'Clásicos en papel vinilo',
-    pattern:
-      'radial-gradient(circle at 50% 50%, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 40%, rgba(255,255,255,0.05) 42%, rgba(255,255,255,0) 44%, rgba(255,255,255,0) 60%, rgba(255,255,255,0.03) 62%, rgba(255,255,255,0) 64%)',
+    image: './media/mascota/materiales/Mikan_vinilo.webp',
   },
   {
     slug: 'vinilo-holografico',
     name: 'Papel Vinilo Holográfico',
     Icon: Sparkles,
-    gradient: 'from-pink-500 via-fuchsia-500 to-cyan-500',
-    activeBorder: 'border-pink-400',
     btnActive: 'bg-gradient-to-r from-pink-500 to-fuchsia-500 text-white border-pink-500',
     btnInactive:
       'bg-transparent border-border text-muted-foreground md:hover:border-pink-500 md:hover:text-pink-200',
     sub: 'Efecto iridiscente',
-    pattern:
-      'repeating-linear-gradient(45deg, rgba(255,255,255,0.06) 0px, rgba(255,255,255,0.06) 2px, transparent 2px, transparent 6px)',
+    image: './media/mascota/materiales/Mikan_holografico.webp',
   },
   {
     slug: 'stickers-comun',
     name: 'Stickers común',
     Icon: Tag,
-    gradient: 'from-amber-500 to-orange-900',
-    activeBorder: 'border-amber-500',
     btnActive: 'bg-amber-600 text-white border-amber-600',
     btnInactive:
       'bg-transparent border-border text-muted-foreground md:hover:border-amber-500 md:hover:text-amber-200',
     sub: 'Económicos y versátiles',
-    pattern:
-      'radial-gradient(circle at 30% 70%, rgba(255,255,255,0.08) 0%, transparent 30%), radial-gradient(circle at 70% 30%, rgba(255,255,255,0.05) 0%, transparent 25%)',
+    image: './media/mascota/materiales/Mikan_sticker_comun.webp',
   },
   {
     slug: 'vinilo-transparente',
     name: 'Papel Vinilo Transparente',
     Icon: Gem,
-    gradient: 'from-cyan-400 to-teal-950',
-    activeBorder: 'border-cyan-400',
     btnActive: 'bg-cyan-600 text-white border-cyan-600',
     btnInactive:
       'bg-transparent border-border text-muted-foreground md:hover:border-cyan-500 md:hover:text-cyan-200',
     sub: 'Sutil y elegante',
-    pattern:
-      'linear-gradient(110deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 40%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0) 90%)',
+    image: './media/mascota/materiales/Mikan_sticker_transparente.png',
   },
 ]
 
 interface CategoriesProps {
-  activeCategory: string
-  onCategorySelect: (slug: string) => void
-  products?: { category: string }[]
+  activeMaterial: string
+  activeCategory: string | null
+  onMaterialSelect: (slug: string) => void
+  onCategorySelect: (category: string | null) => void
+  products?: { material: string; category: string }[]
 }
 
-export function Categories({ activeCategory, onCategorySelect, products }: CategoriesProps) {
+/* ── Individual material card ── */
+
+function MaterialCard({
+  material,
+  index,
+  isActive,
+  onSelect,
+  productCount,
+}: {
+  material: (typeof MATERIALS)[number]
+  index: number
+  isActive: boolean
+  onSelect: () => void
+  productCount: number
+}) {
+  const cardRef = useRef<HTMLDivElement>(null)
+  const shineRef = useRef<HTMLDivElement>(null)
+
+  const [isMobile, setIsMobile] = useState(false)
+  const [reducedMotion, setReducedMotion] = useState(false)
+
+  useEffect(() => {
+    setIsMobile(window.matchMedia('(hover: none)').matches)
+    setReducedMotion(window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+  }, [])
+
+  function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+    if (reducedMotion) return
+    const card = cardRef.current
+    if (!card) return
+
+    const rect = card.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    const px = x / rect.width
+    const py = y / rect.height
+
+    const rotateY = (px - 0.5) * 12
+    const rotateX = (py - 0.5) * -10
+
+    card.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`
+
+    if (shineRef.current) {
+      shineRef.current.style.backgroundPosition = `${x * 1.2}px ${y * 1.2}px`
+      shineRef.current.style.opacity = '1'
+    }
+  }
+
+  function handleMouseLeave() {
+    const card = cardRef.current
+    if (!card) return
+    card.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg) scale(1)'
+    if (shineRef.current) shineRef.current.style.opacity = ''
+  }
+
+  const hasImage = !!material.image
+
+  const maskStyle = hasImage
+    ? {
+        WebkitMaskImage: `url(${material.image})`,
+        maskImage: `url(${material.image})`,
+      }
+    : {}
+
+  return (
+    <div
+      className="animate-fade-in"
+      style={{ animationDelay: `${index * 0.1}s` }}
+    >
+      <div
+        ref={cardRef}
+        className="group cursor-pointer sticker-card"
+        onClick={onSelect}
+        {...(!isMobile ? { onMouseMove: handleMouseMove, onMouseLeave: handleMouseLeave } : {})}
+      >
+        {hasImage ? (
+          <>
+            <div className="relative sticker-content">
+              <ImageWithFallback
+                src={material.image!}
+                alt={material.name}
+                className="w-full h-full object-contain aspect-[4/5]"
+              />
+              <div ref={shineRef} className="sticker-shine" style={maskStyle} />
+              {isActive && (
+                <div className="absolute inset-0 ring-2 ring-primary ring-inset rounded-3xl z-10 pointer-events-none" />
+              )}
+            </div>
+            <div className="pt-1.5 md:pt-2">
+              <div className="font-['Fredoka'] text-sm md:text-base font-700 uppercase leading-tight text-foreground truncate">
+                {material.name}
+              </div>
+              <div className="font-['Fredoka'] text-[10px] md:text-xs tracking-widest text-muted-foreground uppercase truncate">
+                {material.sub}
+              </div>
+              <div className="font-['Fredoka'] text-xs md:text-sm font-700 text-primary">
+                {productCount} diseños
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className="flex flex-col items-center justify-center aspect-[4/5] bg-secondary rounded-3xl sticker-content">
+            <material.Icon
+              className="mb-2 drop-shadow-lg text-muted-foreground"
+              size={36}
+              strokeWidth={1.5}
+            />
+            <div className="w-full px-3 text-center">
+              <div className="font-['Fredoka'] text-sm md:text-lg font-700 tracking-widest uppercase text-foreground truncate">
+                {material.name}
+              </div>
+              <div className="text-[10px] md:text-xs text-muted-foreground mt-1">
+                {productCount} diseños
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+/* ── Design categories (unfolded below a material) ── */
+
+function DesignCategoryCard({
+  name,
+  count,
+  index,
+  isActive,
+  onSelect,
+}: {
+  name: string
+  count: number
+  index: number
+  isActive: boolean
+  onSelect: () => void
+}) {
+  const cardRef = useRef<HTMLDivElement>(null)
+  const shineRef = useRef<HTMLDivElement>(null)
+
+  const [isMobile, setIsMobile] = useState(false)
+  const [reducedMotion, setReducedMotion] = useState(false)
+
+  useEffect(() => {
+    setIsMobile(window.matchMedia('(hover: none)').matches)
+    setReducedMotion(window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+  }, [])
+
+  function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+    if (reducedMotion) return
+    const card = cardRef.current
+    if (!card) return
+    const rect = card.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    const px = x / rect.width
+    const py = y / rect.height
+    const rotateY = (px - 0.5) * 12
+    const rotateX = (py - 0.5) * -10
+    card.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`
+    if (shineRef.current) {
+      shineRef.current.style.backgroundPosition = `${x * 1.2}px ${y * 1.2}px`
+      shineRef.current.style.opacity = '1'
+    }
+  }
+
+  function handleMouseLeave() {
+    const card = cardRef.current
+    if (!card) return
+    card.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg) scale(1)'
+    if (shineRef.current) shineRef.current.style.opacity = ''
+  }
+
+  const catDef = DESIGN_CATEGORIES.find(
+    (c) => c.name.toLowerCase() === name.toLowerCase() || c.slug === name.toLowerCase(),
+  )
+  const hasImage = !!catDef?.image
+  const maskStyle = hasImage
+    ? { WebkitMaskImage: `url(${catDef!.image})`, maskImage: `url(${catDef!.image})` }
+    : {}
+
+  return (
+    <div className="animate-fade-in" style={{ animationDelay: `${index * 0.08}s` }}>
+      <div
+        ref={cardRef}
+        className="group cursor-pointer sticker-card"
+        onClick={onSelect}
+        {...(!isMobile ? { onMouseMove: handleMouseMove, onMouseLeave: handleMouseLeave } : {})}
+      >
+        {hasImage ? (
+          <>
+            <div className="relative sticker-content">
+              <ImageWithFallback
+                src={catDef!.image!}
+                alt={name}
+                className="w-full h-full object-contain aspect-[8/5]"
+              />
+              <div ref={shineRef} className="sticker-shine" style={maskStyle} />
+              {isActive && (
+                <div className="absolute inset-0 ring-2 ring-primary ring-inset rounded-3xl z-10 pointer-events-none" />
+              )}
+            </div>
+            <div className="pt-1.5 md:pt-2">
+              <div className="font-['Fredoka'] text-sm md:text-base font-700 uppercase leading-tight text-foreground truncate">
+                {name}
+              </div>
+              <div className="font-['Fredoka'] text-xs md:text-sm font-700 text-primary">
+                {count} diseños
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className="flex flex-col items-center justify-center aspect-[8/5] bg-secondary rounded-3xl sticker-content">
+            <div className="w-full px-3 text-center">
+              <div className="font-['Fredoka'] text-sm md:text-lg font-700 tracking-widest uppercase text-foreground truncate">
+                {name}
+              </div>
+              <div className="text-[10px] md:text-xs text-muted-foreground mt-1">
+                {count} diseños
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+function DesignCategories({
+  products,
+  activeCategory,
+  onSelect,
+}: {
+  products: { material: string; category: string }[]
+  activeCategory: string | null
+  onSelect: (category: string | null) => void
+}) {
+  const cats = useMemo(() => {
+    const map = new Map<string, number>()
+    products.forEach((p) => {
+      const key = p.category || 'Sin categoría'
+      map.set(key, (map.get(key) || 0) + 1)
+    })
+    return Array.from(map.entries()).sort((a, b) => b[1] - a[1])
+  }, [products])
+
+  if (cats.length === 0) return null
+
+  return (
+    <div className="mt-8 md:mt-12 animate-fade-in">
+      <div className="flex items-center gap-3 mb-6">
+        <div className="text-xs font-['Fredoka'] tracking-widest text-muted-foreground uppercase">
+          — CATEGORÍAS DE DISEÑO
+        </div>
+        <div className="h-px flex-1 bg-border" />
+      </div>
+
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+        <DesignCategoryCard
+          name="TODOS"
+          count={products.length}
+          index={-1}
+          isActive={activeCategory === null}
+          onSelect={() => onSelect(null)}
+        />
+        {cats.map(([name, count], i) => (
+          <DesignCategoryCard
+            key={name}
+            name={name}
+            count={count}
+            index={i}
+            isActive={activeCategory === name}
+            onSelect={() => onSelect(name)}
+          />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+/* ── Categories section ── */
+
+export function Categories({ activeMaterial, activeCategory, onMaterialSelect, onCategorySelect, products }: CategoriesProps) {
   return (
     <section id="categories" className="scroll-mt-20 pt-16 md:pt-28 pb-16 md:pb-20 border-t border-border">
       <div className="max-w-7xl mx-auto px-4">
         {/* Header */}
         <div className="flex items-end justify-between mb-10 md:mb-14">
           <div className="space-y-3">
-            <div className="text-xs font-['Barlow_Condensed'] tracking-widest text-primary uppercase">
-              — EXPLORA POR COLECCIÓN
+            <div className="text-xs font-['Fredoka'] tracking-widest text-primary uppercase">
+              — EXPLORA POR MATERIAL
             </div>
-            <h2 className="font-['Barlow_Condensed'] text-4xl sm:text-5xl md:text-6xl font-900 uppercase leading-none text-foreground">
-              ELEGÍ TU VIBRA.
+            <h2 className="font-['Fredoka'] text-4xl sm:text-5xl md:text-6xl font-900 uppercase leading-none text-foreground">
+              ELEGÍ TU MATERIAL.
               
             </h2>
           </div>
           <button
-            onClick={() => onCategorySelect('all')}
-            className="text-xs font-['Barlow_Condensed'] tracking-widest text-muted-foreground hover:text-foreground uppercase transition-colors hidden md:block"
+            onClick={() => { onMaterialSelect('all'); onCategorySelect(null) }}
+            className="text-xs font-['Fredoka'] tracking-widest text-muted-foreground hover:text-foreground uppercase transition-colors hidden md:block"
           >
             VER TODO →
           </button>
@@ -88,21 +363,21 @@ export function Categories({ activeCategory, onCategorySelect, products }: Categ
         <div className="overflow-x-auto -mx-4 px-4 mb-8 scrollbar-hide">
           <div className="flex gap-3 w-max">
             <button
-              onClick={() => onCategorySelect('all')}
-              className={`px-5 py-2 font-['Barlow_Condensed'] text-sm font-700 tracking-widest uppercase transition-all border rounded-md shrink-0 ${
-                activeCategory === 'all'
+              onClick={() => { onMaterialSelect('all'); onCategorySelect(null) }}
+              className={`px-5 py-2 font-['Fredoka'] text-sm font-700 tracking-widest uppercase transition-all border rounded-xl shrink-0 ${
+                activeMaterial === 'all'
                   ? 'bg-primary text-white border-primary'
                   : 'bg-transparent text-muted-foreground border-border md:hover:border-primary md:hover:text-foreground'
               }`}
             >
               TODOS
             </button>
-            {FIXED_CATEGORIES.map((cat) => (
+            {MATERIALS.map((cat) => (
               <button
                 key={cat.slug}
-                onClick={() => onCategorySelect(cat.slug)}
-                className={`px-5 py-2 font-['Barlow_Condensed'] text-sm font-700 tracking-widest uppercase transition-all border rounded-md shrink-0 ${
-                  activeCategory === cat.slug ? cat.btnActive : cat.btnInactive
+                onClick={() => { onMaterialSelect(cat.slug); onCategorySelect(null) }}
+                className={`px-5 py-2 font-['Fredoka'] text-sm font-700 tracking-widest uppercase transition-all border rounded-xl shrink-0 ${
+                  activeMaterial === cat.slug ? cat.btnActive : cat.btnInactive
                 }`}
               >
                 {cat.name}
@@ -111,64 +386,28 @@ export function Categories({ activeCategory, onCategorySelect, products }: Categ
           </div>
         </div>
 
-        {/* Category cards */}
+        {/* Material cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {FIXED_CATEGORIES.map((cat, i) => (
-            <button
-              key={cat.slug}
-              onClick={() => onCategorySelect(cat.slug)}
-              style={{ animationDelay: `${i * 0.1}s` }}
-              className={`group relative aspect-square flex flex-col items-center justify-center rounded-xl overflow-hidden border-2 transition-all duration-300 animate-fade-in ${
-                activeCategory === cat.slug
-                  ? `${cat.activeBorder} scale-[1.02]`
-                  : 'border-transparent'
-              } ${activeCategory !== cat.slug ? 'md:hover:scale-[1.02]' : ''}`}
-            >
-              {/* Gradient background */}
-              <div
-                className={`absolute inset-0 bg-gradient-to-br ${cat.gradient} transition-opacity duration-300 ${
-                  activeCategory === cat.slug ? 'opacity-100' : 'opacity-80'
-                } ${activeCategory !== cat.slug ? 'md:group-hover:opacity-100' : ''}`}
-              />
-
-              {/* Decorative pattern */}
-              <div
-                className="absolute inset-0 opacity-20"
-                style={{ backgroundImage: cat.pattern }}
-              />
-
-              {/* Icon */}
-              <cat.Icon
-                className="relative mb-2 md:mb-3 drop-shadow-lg"
-                size={36}
-                strokeWidth={1.5}
-                color="white"
-              />
-
-              {/* Name */}
-              <div className="relative w-full px-2 text-center">
-                <div className="font-['Barlow_Condensed'] text-sm md:text-lg font-700 tracking-widest uppercase text-white drop-shadow-lg truncate">
-                  {cat.name}
-                </div>
-              </div>
-
-              {/* Sub label - hide on mobile */}
-              <div className="relative text-xs text-white/70 mt-1 drop-shadow font-['Barlow_Condensed'] tracking-wider uppercase hidden md:block truncate max-w-[90%]">
-                {cat.sub}
-              </div>
-
-              {/* Products count */}
-              <div className="relative text-[10px] md:text-xs text-white/50 mt-1">
-                {products ? products.filter((p) => p.category === cat.slug).length : 0} diseños
-              </div>
-
-              {/* Active indicator */}
-              {activeCategory === cat.slug && (
-                <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/60 z-10" />
-              )}
-            </button>
+          {MATERIALS.map((material, i) => (
+            <MaterialCard
+              key={material.slug}
+              material={material}
+              index={i}
+              isActive={activeMaterial === material.slug}
+              onSelect={() => { onMaterialSelect(material.slug); onCategorySelect(null) }}
+              productCount={products ? products.filter((p) => toMaterialSlug(p.material) === material.slug).length : 0}
+            />
           ))}
         </div>
+
+        {/* Design categories — shown when a material is selected */}
+        {activeMaterial !== 'all' && products && (
+          <DesignCategories
+            products={products.filter((p) => toMaterialSlug(p.material) === activeMaterial)}
+            activeCategory={activeCategory}
+            onSelect={onCategorySelect}
+          />
+        )}
       </div>
     </section>
   )

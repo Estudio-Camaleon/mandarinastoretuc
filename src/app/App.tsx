@@ -22,7 +22,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="font-['Barlow_Condensed'] text-lg text-muted-foreground uppercase tracking-widest">
+        <div className="font-['Fredoka'] text-lg text-muted-foreground uppercase tracking-widest">
           Cargando sesión...
         </div>
       </div>
@@ -38,23 +38,29 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
 function PublicLayout({
   products,
+  activeMaterial,
   activeCategory,
+  onMaterialSelect,
   onCategorySelect,
 }: {
   products: Product[]
-  activeCategory: string
-  onCategorySelect: (slug: string) => void
+  activeMaterial: string
+  activeCategory: string | null
+  onMaterialSelect: (slug: string) => void
+  onCategorySelect: (category: string | null) => void
 }) {
   return (
     <>
       <Navbar />
       <Hero />
       <Categories
+        activeMaterial={activeMaterial}
         activeCategory={activeCategory}
+        onMaterialSelect={onMaterialSelect}
         onCategorySelect={onCategorySelect}
         products={products}
       />
-      <Products products={products} activeCategory={activeCategory} />
+      <Products products={products} activeMaterial={activeMaterial} activeCategory={activeCategory} />
       <ContactForm />
       <Footer />
     </>
@@ -64,7 +70,8 @@ function PublicLayout({
 export default function App() {
   const [products, setProducts] = useState<Product[]>([])
   const [dataLoading, setDataLoading] = useState(true)
-  const [activeCategory, setActiveCategory] = useState('all')
+  const [activeMaterial, setActiveMaterial] = useState('all')
+  const [activeCategory, setActiveCategory] = useState<string | null>(null)
 
   const loadData = async () => {
     try {
@@ -84,7 +91,7 @@ export default function App() {
 
   const noiseOverlay = (
     <div
-      className="fixed inset-0 z-0 pointer-events-none opacity-[0.03] mix-blend-overlay"
+      className="fixed inset-0 z-0 pointer-events-none opacity-[0.05] mix-blend-overlay"
       style={{
         backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
         backgroundRepeat: 'repeat',
@@ -98,7 +105,7 @@ export default function App() {
       <div className="min-h-screen bg-background text-foreground relative">
         {noiseOverlay}
         <div className="relative z-10 min-h-screen flex items-center justify-center">
-          <div className="font-['Barlow_Condensed'] text-lg text-muted-foreground uppercase tracking-widest">
+          <div className="font-['Fredoka'] text-lg text-muted-foreground uppercase tracking-widest">
             Cargando...
           </div>
         </div>
@@ -116,7 +123,9 @@ export default function App() {
             element={
               <PublicLayout
                 products={products}
+                activeMaterial={activeMaterial}
                 activeCategory={activeCategory}
+                onMaterialSelect={setActiveMaterial}
                 onCategorySelect={setActiveCategory}
               />
             }

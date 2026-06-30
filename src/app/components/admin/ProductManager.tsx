@@ -15,7 +15,12 @@ import { toast } from 'sonner'
 import { ImageWithFallback } from '../ImageWithFallback'
 import type { Product } from '../Products'
 import { createProduct, updateProduct, deleteProduct, uploadImage } from '../../../lib/api'
-import { FIXED_CATEGORIES } from '../../../lib/site'
+import { MATERIALS, DESIGN_CATEGORIES } from '../../../lib/site'
+
+const SIZES: string[] = []
+for (let i = 3; i <= 15; i++) {
+  SIZES.push(`${i} × ${i} cm`)
+}
 
 interface ProductManagerProps {
   products: Product[]
@@ -31,9 +36,9 @@ const EMPTY_FORM: Omit<Product, 'id' | 'created_at'> = {
   category: '',
   description: '',
   image: '',
-  material: 'Vinilo',
+  material: MATERIALS[0]!.slug,
   finish: 'Mate',
-  size: '7.5 × 5 cm',
+  size: SIZES[0]!,
   waterproof: true,
   rating: 5,
   reviews: 0,
@@ -229,7 +234,7 @@ export function ProductManager({ products, onRefresh }: ProductManagerProps) {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="font-['Barlow_Condensed'] text-3xl font-900 uppercase tracking-tight text-foreground">
+          <h2 className="font-['Fredoka'] text-3xl font-900 uppercase tracking-tight text-foreground">
             Productos
           </h2>
           <div className="text-muted-foreground text-sm mt-0.5">
@@ -238,7 +243,7 @@ export function ProductManager({ products, onRefresh }: ProductManagerProps) {
         </div>
         <button
           onClick={openAdd}
-          className="flex items-center gap-2 bg-primary text-white px-5 py-2.5 font-['Barlow_Condensed'] text-sm font-700 uppercase tracking-widest hover:bg-primary/90 transition-colors"
+          className="flex items-center gap-2 bg-primary text-white px-5 py-2.5 font-['Fredoka'] text-sm font-700 uppercase tracking-widest hover:bg-primary/90 transition-colors"
         >
           <Plus size={16} />
           AGREGAR PRODUCTO
@@ -274,7 +279,7 @@ export function ProductManager({ products, onRefresh }: ProductManagerProps) {
             <thead>
               <tr className="border-b border-border">
                 <th
-                  className="px-5 py-3 text-left text-[10px] font-['Barlow_Condensed'] uppercase tracking-widest text-muted-foreground cursor-pointer select-none hover:text-foreground transition-colors"
+                  className="px-5 py-3 text-left text-[10px] font-['Fredoka'] uppercase tracking-widest text-muted-foreground cursor-pointer select-none hover:text-foreground transition-colors"
                   onClick={() => toggleSort('name')}
                 >
                   <div className="flex items-center gap-1">
@@ -282,7 +287,7 @@ export function ProductManager({ products, onRefresh }: ProductManagerProps) {
                   </div>
                 </th>
                 <th
-                  className="px-5 py-3 text-left text-[10px] font-['Barlow_Condensed'] uppercase tracking-widest text-muted-foreground cursor-pointer select-none hover:text-foreground transition-colors"
+                  className="px-5 py-3 text-left text-[10px] font-['Fredoka'] uppercase tracking-widest text-muted-foreground cursor-pointer select-none hover:text-foreground transition-colors"
                   onClick={() => toggleSort('category')}
                 >
                   <div className="flex items-center gap-1">
@@ -290,14 +295,14 @@ export function ProductManager({ products, onRefresh }: ProductManagerProps) {
                   </div>
                 </th>
                 <th
-                  className="px-5 py-3 text-left text-[10px] font-['Barlow_Condensed'] uppercase tracking-widest text-muted-foreground cursor-pointer select-none hover:text-foreground transition-colors"
+                  className="px-5 py-3 text-left text-[10px] font-['Fredoka'] uppercase tracking-widest text-muted-foreground cursor-pointer select-none hover:text-foreground transition-colors"
                   onClick={() => toggleSort('price')}
                 >
                   <div className="flex items-center gap-1">
                     Precio <SortIcon sortKey={sortKey} sortDir={sortDir} column="price" />
                   </div>
                 </th>
-                <th className="px-5 py-3 text-left text-[10px] font-['Barlow_Condensed'] uppercase tracking-widest text-muted-foreground">
+                <th className="px-5 py-3 text-left text-[10px] font-['Fredoka'] uppercase tracking-widest text-muted-foreground">
                   Acciones
                 </th>
               </tr>
@@ -315,7 +320,7 @@ export function ProductManager({ products, onRefresh }: ProductManagerProps) {
                         />
                       </div>
                       <div>
-                        <div className="font-['Barlow_Condensed'] font-700 uppercase text-sm text-foreground">
+                        <div className="font-['Fredoka'] font-700 uppercase text-sm text-foreground">
                           {product.name}
                         </div>
                         <div className="text-xs text-muted-foreground line-clamp-1 max-w-xs">
@@ -325,12 +330,12 @@ export function ProductManager({ products, onRefresh }: ProductManagerProps) {
                     </div>
                   </td>
                   <td className="px-5 py-3">
-                    <span className="text-xs font-['Barlow_Condensed'] uppercase tracking-wider text-primary bg-primary/10 px-2 py-0.5">
+                    <span className="text-xs font-['Fredoka'] uppercase tracking-wider text-primary bg-primary/10 px-2 py-0.5">
                       {product.category}
                     </span>
                   </td>
                   <td className="px-5 py-3">
-                    <span className="font-['Barlow_Condensed'] font-900 text-foreground">
+                    <span className="font-['Fredoka'] font-900 text-foreground">
                       ${product.price.toFixed(2)}
                     </span>
                   </td>
@@ -358,7 +363,7 @@ export function ProductManager({ products, onRefresh }: ProductManagerProps) {
                 <tr>
                   <td
                     colSpan={4}
-                    className="text-center py-12 text-muted-foreground font-['Barlow_Condensed'] uppercase tracking-widest text-sm"
+                    className="text-center py-12 text-muted-foreground font-['Fredoka'] uppercase tracking-widest text-sm"
                   >
                     {search
                       ? 'No hay productos que coincidan con tu búsqueda'
@@ -373,7 +378,7 @@ export function ProductManager({ products, onRefresh }: ProductManagerProps) {
 
       {/* Results info */}
       {filtered.length > 0 && filtered.length < products.length && (
-        <div className="text-xs text-muted-foreground mt-3 font-['Barlow_Condensed'] tracking-wider">
+        <div className="text-xs text-muted-foreground mt-3 font-['Fredoka'] tracking-wider">
           Mostrando {filtered.length} de {products.length} productos
         </div>
       )}
@@ -388,7 +393,7 @@ export function ProductManager({ products, onRefresh }: ProductManagerProps) {
         >
           <div className="bg-card border border-border w-full max-w-lg max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between px-6 py-4 border-b border-border sticky top-0 bg-card z-10">
-              <div className="font-['Barlow_Condensed'] text-xl font-700 uppercase tracking-wide text-foreground">
+              <div className="font-['Fredoka'] text-xl font-700 uppercase tracking-wide text-foreground">
                 {editingId ? 'EDITAR PRODUCTO' : 'AGREGAR PRODUCTO'}
               </div>
               <button onClick={handleClose} className="text-muted-foreground hover:text-foreground">
@@ -399,7 +404,7 @@ export function ProductManager({ products, onRefresh }: ProductManagerProps) {
             <div className="p-6 space-y-5">
               {/* Image upload */}
               <div>
-                <label className="block text-xs font-['Barlow_Condensed'] tracking-widest uppercase text-muted-foreground mb-2">
+                <label className="block text-xs font-['Fredoka'] tracking-widest uppercase text-muted-foreground mb-2">
                   Imagen del Producto
                 </label>
                 <div
@@ -409,7 +414,7 @@ export function ProductManager({ products, onRefresh }: ProductManagerProps) {
                   {uploadingImage ? (
                     <div className="flex flex-col items-center gap-2">
                       <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                      <div className="text-xs font-['Barlow_Condensed'] uppercase tracking-widest text-muted-foreground">
+                      <div className="text-xs font-['Fredoka'] uppercase tracking-widest text-muted-foreground">
                         Subiendo...
                       </div>
                     </div>
@@ -420,14 +425,14 @@ export function ProductManager({ products, onRefresh }: ProductManagerProps) {
                         alt="Preview"
                         className="absolute inset-0 w-full h-full object-cover opacity-70"
                       />
-                      <div className="relative z-10 bg-black/60 px-3 py-1 text-xs font-['Barlow_Condensed'] uppercase tracking-widest text-white">
+                      <div className="relative z-10 bg-black/60 px-3 py-1 text-xs font-['Fredoka'] uppercase tracking-widest text-white">
                         CLICK PARA CAMBIAR
                       </div>
                     </>
                   ) : (
                     <>
                       <Upload size={24} className="text-muted-foreground" />
-                      <div className="text-xs font-['Barlow_Condensed'] uppercase tracking-widest text-muted-foreground">
+                      <div className="text-xs font-['Fredoka'] uppercase tracking-widest text-muted-foreground">
                         CLICK PARA SUBIR IMAGEN
                       </div>
                       <div className="text-[10px] text-muted-foreground/50">
@@ -461,7 +466,7 @@ export function ProductManager({ products, onRefresh }: ProductManagerProps) {
 
               {/* Name */}
               <div>
-                <label className="block text-xs font-['Barlow_Condensed'] tracking-widest uppercase text-muted-foreground mb-2">
+                <label className="block text-xs font-['Fredoka'] tracking-widest uppercase text-muted-foreground mb-2">
                   Nombre del Producto *
                 </label>
                 <input
@@ -478,7 +483,7 @@ export function ProductManager({ products, onRefresh }: ProductManagerProps) {
                   autoFocus
                 />
                 {errors.name && (
-                  <div className="text-[10px] text-destructive mt-1 font-['Barlow_Condensed'] tracking-wider flex items-center gap-1">
+                  <div className="text-[10px] text-destructive mt-1 font-['Fredoka'] tracking-wider flex items-center gap-1">
                     <AlertTriangle size={10} />
                     {errors.name}
                   </div>
@@ -488,7 +493,7 @@ export function ProductManager({ products, onRefresh }: ProductManagerProps) {
               {/* Price + Category */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-['Barlow_Condensed'] tracking-widest uppercase text-muted-foreground mb-2">
+                  <label className="block text-xs font-['Fredoka'] tracking-widest uppercase text-muted-foreground mb-2">
                     Precio ($) *
                   </label>
                   <input
@@ -508,14 +513,14 @@ export function ProductManager({ products, onRefresh }: ProductManagerProps) {
                     }`}
                   />
                   {errors.price && (
-                    <div className="text-[10px] text-destructive mt-1 font-['Barlow_Condensed'] tracking-wider flex items-center gap-1">
+                    <div className="text-[10px] text-destructive mt-1 font-['Fredoka'] tracking-wider flex items-center gap-1">
                       <AlertTriangle size={10} />
                       {errors.price}
                     </div>
                   )}
                 </div>
                 <div>
-                  <label className="block text-xs font-['Barlow_Condensed'] tracking-widest uppercase text-muted-foreground mb-2">
+                  <label className="block text-xs font-['Fredoka'] tracking-widest uppercase text-muted-foreground mb-2">
                     Categoría *
                   </label>
                   <select
@@ -530,14 +535,14 @@ export function ProductManager({ products, onRefresh }: ProductManagerProps) {
                     }`}
                   >
                     <option value="">Seleccionar...</option>
-                    {FIXED_CATEGORIES.map((cat) => (
-                      <option key={cat.slug} value={cat.slug}>
+                    {DESIGN_CATEGORIES.map((cat) => (
+                      <option key={cat.slug} value={cat.name}>
                         {cat.name}
                       </option>
                     ))}
                   </select>
                   {errors.category && (
-                    <div className="text-[10px] text-destructive mt-1 font-['Barlow_Condensed'] tracking-wider flex items-center gap-1">
+                    <div className="text-[10px] text-destructive mt-1 font-['Fredoka'] tracking-wider flex items-center gap-1">
                       <AlertTriangle size={10} />
                       {errors.category}
                     </div>
@@ -548,11 +553,11 @@ export function ProductManager({ products, onRefresh }: ProductManagerProps) {
               {/* Description */}
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <label className="block text-xs font-['Barlow_Condensed'] tracking-widest uppercase text-muted-foreground">
+                  <label className="block text-xs font-['Fredoka'] tracking-widest uppercase text-muted-foreground">
                     Descripción
                   </label>
                   <span
-                    className={`text-[10px] font-['Barlow_Condensed'] tracking-wider ${form.description.length > 500 ? 'text-destructive' : 'text-muted-foreground'}`}
+                    className={`text-[10px] font-['Fredoka'] tracking-wider ${form.description.length > 500 ? 'text-destructive' : 'text-muted-foreground'}`}
                   >
                     {form.description.length}/500
                   </span>
@@ -571,7 +576,7 @@ export function ProductManager({ products, onRefresh }: ProductManagerProps) {
                   }`}
                 />
                 {errors.description && (
-                  <div className="text-[10px] text-destructive mt-1 font-['Barlow_Condensed'] tracking-wider flex items-center gap-1">
+                  <div className="text-[10px] text-destructive mt-1 font-['Fredoka'] tracking-wider flex items-center gap-1">
                     <AlertTriangle size={10} />
                     {errors.description}
                   </div>
@@ -581,7 +586,7 @@ export function ProductManager({ products, onRefresh }: ProductManagerProps) {
               {/* Material + Finish + Size */}
               <div className="grid grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-xs font-['Barlow_Condensed'] tracking-widest uppercase text-muted-foreground mb-2">
+                  <label className="block text-xs font-['Fredoka'] tracking-widest uppercase text-muted-foreground mb-2">
                     Material
                   </label>
                   <select
@@ -592,14 +597,16 @@ export function ProductManager({ products, onRefresh }: ProductManagerProps) {
                     }}
                     className="w-full bg-secondary border border-border px-3 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors"
                   >
-                    <option value="Vinilo">Vinilo</option>
-                    <option value="Vinilo Premium">Vinilo Premium</option>
-                    <option value="Vinilo Reflectivo">Vinilo Reflectivo</option>
-                    <option value="Vinilo Transparente">Vinilo Transparente</option>
+                    <option value="">Seleccionar...</option>
+                    {MATERIALS.map((m) => (
+                      <option key={m.slug} value={m.slug}>
+                        {m.name}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-['Barlow_Condensed'] tracking-widest uppercase text-muted-foreground mb-2">
+                  <label className="block text-xs font-['Fredoka'] tracking-widest uppercase text-muted-foreground mb-2">
                     Acabado
                   </label>
                   <select
@@ -616,7 +623,7 @@ export function ProductManager({ products, onRefresh }: ProductManagerProps) {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-['Barlow_Condensed'] tracking-widest uppercase text-muted-foreground mb-2">
+                  <label className="block text-xs font-['Fredoka'] tracking-widest uppercase text-muted-foreground mb-2">
                     Tamaño
                   </label>
                   <select
@@ -627,11 +634,12 @@ export function ProductManager({ products, onRefresh }: ProductManagerProps) {
                     }}
                     className="w-full bg-secondary border border-border px-3 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors"
                   >
-                    <option value="5 × 5 cm">5 × 5 cm</option>
-                    <option value="7.5 × 5 cm">7.5 × 5 cm</option>
-                    <option value="10 × 10 cm">10 × 10 cm</option>
-                    <option value="15 × 10 cm">15 × 10 cm</option>
-                    <option value="20 × 15 cm">20 × 15 cm</option>
+                    <option value="">Seleccionar...</option>
+                    {SIZES.map((s) => (
+                      <option key={s} value={s}>
+                        {s}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -648,7 +656,7 @@ export function ProductManager({ products, onRefresh }: ProductManagerProps) {
                     }}
                     className="w-4 h-4 rounded border-border bg-secondary text-primary focus:ring-primary"
                   />
-                  <span className="text-xs font-['Barlow_Condensed'] tracking-widest uppercase text-muted-foreground">
+                  <span className="text-xs font-['Fredoka'] tracking-widest uppercase text-muted-foreground">
                     Impermeable
                   </span>
                 </label>
@@ -659,7 +667,7 @@ export function ProductManager({ products, onRefresh }: ProductManagerProps) {
                 <button
                   onClick={handleSave}
                   disabled={!form.name.trim() || !form.category || form.price <= 0 || saving}
-                  className="flex-1 bg-primary text-white py-3 font-['Barlow_Condensed'] font-700 uppercase tracking-widest hover:bg-primary/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="flex-1 bg-primary text-white py-3 font-['Fredoka'] font-700 uppercase tracking-widest hover:bg-primary/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   {saving ? (
                     <span className="flex items-center justify-center gap-2">
@@ -674,7 +682,7 @@ export function ProductManager({ products, onRefresh }: ProductManagerProps) {
                 </button>
                 <button
                   onClick={handleClose}
-                  className="px-5 border border-border text-muted-foreground font-['Barlow_Condensed'] uppercase tracking-widest hover:border-foreground hover:text-foreground transition-colors"
+                  className="px-5 border border-border text-muted-foreground font-['Fredoka'] uppercase tracking-widest hover:border-foreground hover:text-foreground transition-colors"
                 >
                   CANCELAR
                 </button>
@@ -688,7 +696,7 @@ export function ProductManager({ products, onRefresh }: ProductManagerProps) {
       {confirmClose && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80">
           <div className="bg-card border border-border p-6 max-w-sm w-full">
-            <div className="font-['Barlow_Condensed'] text-xl font-700 uppercase tracking-wide text-foreground mb-2">
+            <div className="font-['Fredoka'] text-xl font-700 uppercase tracking-wide text-foreground mb-2">
               ¿Descartar Cambios?
             </div>
             <p className="text-muted-foreground text-sm mb-6">
@@ -700,13 +708,13 @@ export function ProductManager({ products, onRefresh }: ProductManagerProps) {
                   setConfirmClose(false)
                   setShowForm(false)
                 }}
-                className="flex-1 bg-destructive text-white py-2.5 font-['Barlow_Condensed'] font-700 uppercase tracking-widest hover:opacity-90 transition-opacity"
+                className="flex-1 bg-destructive text-white py-2.5 font-['Fredoka'] font-700 uppercase tracking-widest hover:opacity-90 transition-opacity"
               >
                 DESCARTAR
               </button>
               <button
                 onClick={() => setConfirmClose(false)}
-                className="flex-1 border border-border text-foreground py-2.5 font-['Barlow_Condensed'] font-700 uppercase tracking-widest hover:bg-secondary transition-colors"
+                className="flex-1 border border-border text-foreground py-2.5 font-['Fredoka'] font-700 uppercase tracking-widest hover:bg-secondary transition-colors"
               >
                 SEGUIR EDITANDO
               </button>
@@ -719,7 +727,7 @@ export function ProductManager({ products, onRefresh }: ProductManagerProps) {
       {deleteId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80">
           <div className="bg-card border border-border p-6 max-w-sm w-full">
-            <div className="font-['Barlow_Condensed'] text-xl font-700 uppercase tracking-wide text-foreground mb-2">
+            <div className="font-['Fredoka'] text-xl font-700 uppercase tracking-wide text-foreground mb-2">
               ¿Eliminar Producto?
             </div>
             <p className="text-muted-foreground text-sm mb-6">Esta acción no se puede deshacer.</p>
@@ -727,7 +735,7 @@ export function ProductManager({ products, onRefresh }: ProductManagerProps) {
               <button
                 onClick={() => handleDelete(deleteId)}
                 disabled={deleting}
-                className="flex-1 bg-destructive text-white py-2.5 font-['Barlow_Condensed'] font-700 uppercase tracking-widest hover:opacity-90 transition-opacity disabled:opacity-50"
+                className="flex-1 bg-destructive text-white py-2.5 font-['Fredoka'] font-700 uppercase tracking-widest hover:opacity-90 transition-opacity disabled:opacity-50"
               >
                 {deleting ? (
                   <span className="flex items-center justify-center gap-2">
@@ -740,7 +748,7 @@ export function ProductManager({ products, onRefresh }: ProductManagerProps) {
               </button>
               <button
                 onClick={() => setDeleteId(null)}
-                className="flex-1 border border-border text-foreground py-2.5 font-['Barlow_Condensed'] font-700 uppercase tracking-widest hover:bg-secondary transition-colors"
+                className="flex-1 border border-border text-foreground py-2.5 font-['Fredoka'] font-700 uppercase tracking-widest hover:bg-secondary transition-colors"
               >
                 CANCELAR
               </button>

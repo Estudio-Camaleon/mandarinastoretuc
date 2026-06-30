@@ -43,10 +43,51 @@ export const LEGAL_LINKS = ['Privacidad', 'Términos', 'Cookies']
 /* ── Footer copyright ──────────────────────────────── */
 export const COPYRIGHT = `© ${new Date().getFullYear()} ${SITE_NAME} — Todos los derechos reservados.`
 
-/* ── Fixed categories (hardcoded, not from DB) ────── */
-export const FIXED_CATEGORIES = [
+/* ── Fixed materials (hardcoded, not from DB) ──────── */
+export const MATERIALS = [
   { slug: 'vinilos', name: 'Papel Vinilo' },
   { slug: 'vinilo-holografico', name: 'Papel Vinilo Holográfico' },
   { slug: 'stickers-comun', name: 'Stickers común' },
   { slug: 'vinilo-transparente', name: 'Papel Vinilo Transparente' },
 ]
+
+/* ── Design categories (can have cover images) ─────── */
+export const DESIGN_CATEGORIES = [
+  { slug: 'anime', name: 'Anime', image: './media/categoria/diseños/Conjunto_anime.webp' },
+  { slug: 'comic', name: 'Comic', image: '' },
+  { slug: 'caricaturas', name: 'Caricaturas', image: '' },
+  { slug: 'musica', name: 'Música', image: '' },
+  { slug: 'deportes', name: 'Deportes', image: '' },
+  { slug: 'videojuegos', name: 'Videojuegos', image: '' },
+  { slug: 'peliculas', name: 'Películas', image: '' },
+  { slug: 'naturaleza', name: 'Naturaleza', image: '' },
+  { slug: 'animales', name: 'Animales', image: '' },
+  { slug: 'frase-texto', name: 'Frase/Texto', image: '' },
+  { slug: 'personalizado', name: 'Personalizado', image: '' },
+  { slug: 'otro', name: 'Otro', image: '' },
+]
+
+export function findCategory(name: string): (typeof DESIGN_CATEGORIES)[number] | undefined {
+  const lower = name.toLowerCase()
+  return DESIGN_CATEGORIES.find(
+    (c) => c.slug === lower || c.name.toLowerCase() === lower,
+  )
+}
+
+/* Normalize any material value (slug or display name) to its slug */
+const MATERIAL_SLUG_MAP: Record<string, string> = {}
+for (const m of MATERIALS) {
+  MATERIAL_SLUG_MAP[m.slug] = m.slug
+  MATERIAL_SLUG_MAP[m.name] = m.slug
+  MATERIAL_SLUG_MAP[m.name.toLowerCase()] = m.slug
+}
+/* Also handle old/admin display names */
+MATERIAL_SLUG_MAP['Vinilo'] = 'vinilos'
+MATERIAL_SLUG_MAP['Vinilo Premium'] = 'vinilos'
+MATERIAL_SLUG_MAP['Vinilo Reflectivo'] = 'vinilos'
+MATERIAL_SLUG_MAP['Vinilo Holográfico'] = 'vinilo-holografico'
+MATERIAL_SLUG_MAP['Vinilo Transparente'] = 'vinilo-transparente'
+
+export function toMaterialSlug(val: string): string {
+  return MATERIAL_SLUG_MAP[val] ?? val
+}
