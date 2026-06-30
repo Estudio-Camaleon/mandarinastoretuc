@@ -72,7 +72,7 @@ export function AdminPanel({ products, onRefresh }: AdminPanelProps) {
         </div>
 
         <div className="px-3 py-2 border-b border-border">
-          <div className="text-[10px] font-['Barlow_Condensed'] tracking-widest text-muted-foreground uppercase px-2">
+          <div className="text-[10px] font-['Fredoka'] tracking-widest text-muted-foreground uppercase px-2">
             Panel de Administración
           </div>
         </div>
@@ -86,7 +86,7 @@ export function AdminPanel({ products, onRefresh }: AdminPanelProps) {
                 setView(id)
                 setSidebarOpen(false)
               }}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 mb-1 transition-all text-sm font-['Barlow_Condensed'] font-600 tracking-wide uppercase ${
+              className={`w-full flex items-center gap-3 px-3 py-2.5 mb-1 transition-all text-sm font-['Fredoka'] font-600 tracking-wide uppercase ${
                 view === id
                   ? 'bg-primary text-white'
                   : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
@@ -103,7 +103,7 @@ export function AdminPanel({ products, onRefresh }: AdminPanelProps) {
         <div className="p-3 border-t border-border">
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-3 py-2.5 text-muted-foreground hover:text-destructive transition-colors text-sm font-['Barlow_Condensed'] uppercase tracking-wide"
+            className="w-full flex items-center gap-3 px-3 py-2.5 text-muted-foreground hover:text-destructive transition-colors text-sm font-['Fredoka'] uppercase tracking-wide"
           >
             <LogOut size={16} />
             Cerrar Sesión
@@ -133,19 +133,19 @@ export function AdminPanel({ products, onRefresh }: AdminPanelProps) {
             {view !== 'dashboard' ? (
               <button
                 onClick={() => setView('dashboard')}
-                className="flex items-center gap-1 text-xs font-['Barlow_Condensed'] tracking-widest uppercase text-muted-foreground hover:text-foreground transition-colors"
+                className="flex items-center gap-1 text-xs font-['Fredoka'] tracking-widest uppercase text-muted-foreground hover:text-foreground transition-colors"
               >
                 ← PANEL
               </button>
             ) : (
-              <div className="font-['Barlow_Condensed'] text-lg font-700 uppercase tracking-wide text-foreground">
+              <div className="font-['Fredoka'] text-lg font-700 uppercase tracking-wide text-foreground">
                 {NAV_ITEMS.find((n) => n.id === view)?.label}
               </div>
             )}
           </div>
           <button
             onClick={goToStore}
-            className="text-xs font-['Barlow_Condensed'] tracking-widest uppercase text-muted-foreground hover:text-foreground transition-colors hidden md:block"
+            className="text-xs font-['Fredoka'] tracking-widest uppercase text-muted-foreground hover:text-foreground transition-colors hidden md:block"
           >
             ← VOLVER A LA TIENDA
           </button>

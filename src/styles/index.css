@@ -2,3 +2,7 @@
 @import './tailwind.css';
 @import './theme.css';
 @import './card-animations.css';
+
+body {
+  font-family: 'Fredoka', sans-serif;
+}

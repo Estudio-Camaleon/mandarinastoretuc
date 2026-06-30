@@ -41,7 +41,7 @@ export function AdminLogin() {
             alt="MandarinaStore"
             className="h-12 md:h-14 w-auto mx-auto"
           />
-          <div className="text-xs font-['Barlow_Condensed'] tracking-widest text-muted-foreground uppercase mt-1">
+          <div className="text-xs font-['Fredoka'] tracking-widest text-muted-foreground uppercase mt-1">
             Panel de Administración
           </div>
         </div>
@@ -49,14 +49,14 @@ export function AdminLogin() {
         <div className="border border-border bg-card p-8">
           <div className="flex items-center gap-2 mb-6">
             <Lock size={16} className="text-primary" />
-            <h1 className="font-['Barlow_Condensed'] text-xl font-700 uppercase tracking-wider text-foreground">
+            <h1 className="font-['Fredoka'] text-xl font-700 uppercase tracking-wider text-foreground">
               Iniciar Sesión
             </h1>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-['Barlow_Condensed'] tracking-widest uppercase text-muted-foreground mb-2">
+              <label className="block text-xs font-['Fredoka'] tracking-widest uppercase text-muted-foreground mb-2">
                 Correo Electrónico
               </label>
               <input
@@ -71,7 +71,7 @@ export function AdminLogin() {
             </div>
 
             <div>
-              <label className="block text-xs font-['Barlow_Condensed'] tracking-widest uppercase text-muted-foreground mb-2">
+              <label className="block text-xs font-['Fredoka'] tracking-widest uppercase text-muted-foreground mb-2">
                 Contraseña
               </label>
               <div className="relative">
@@ -95,7 +95,7 @@ export function AdminLogin() {
             </div>
 
             {error && (
-              <div className="text-xs text-destructive bg-destructive/10 border border-destructive/20 px-3 py-2 font-['Barlow_Condensed']">
+              <div className="text-xs text-destructive bg-destructive/10 border border-destructive/20 px-3 py-2 font-['Fredoka']">
                 {error}
               </div>
             )}
@@ -103,14 +103,14 @@ export function AdminLogin() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-primary text-white py-3 font-['Barlow_Condensed'] text-base font-700 tracking-widest uppercase hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+              className="w-full bg-primary text-white py-3 font-['Fredoka'] text-base font-700 tracking-widest uppercase hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-2"
             >
               {loading ? 'INICIANDO...' : 'INICIAR SESIÓN →'}
             </button>
           </form>
 
           <div className="mt-4 text-center">
-            <div className="text-xs text-muted-foreground font-['Barlow_Condensed'] tracking-wide">
+            <div className="text-xs text-muted-foreground font-['Fredoka'] tracking-wide">
               Usa tus credenciales de Supabase Auth
             </div>
           </div>
@@ -118,7 +118,7 @@ export function AdminLogin() {
 
         <button
           onClick={() => navigate('/')}
-          className="w-full mt-4 text-xs font-['Barlow_Condensed'] tracking-widest uppercase text-muted-foreground hover:text-foreground transition-colors py-2"
+          className="w-full mt-4 text-xs font-['Fredoka'] tracking-widest uppercase text-muted-foreground hover:text-foreground transition-colors py-2"
         >
           ← VOLVER A LA TIENDA
         </button>

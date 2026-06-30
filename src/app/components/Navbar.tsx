@@ -47,25 +47,25 @@ export function Navbar() {
         <div className="hidden md:flex items-center gap-6">
           <button
             onClick={() => scrollTo('hero')}
-            className="text-xs font-['Barlow_Condensed'] tracking-widest uppercase text-muted-foreground hover:text-foreground transition-colors"
+            className="text-xs font-['Fredoka'] tracking-widest uppercase text-muted-foreground hover:text-foreground transition-colors"
           >
             Inicio
           </button>
           <button
             onClick={() => scrollTo('categories')}
-            className="text-xs font-['Barlow_Condensed'] tracking-widest uppercase text-muted-foreground hover:text-foreground transition-colors"
+            className="text-xs font-['Fredoka'] tracking-widest uppercase text-muted-foreground hover:text-foreground transition-colors"
           >
             Colecciones
           </button>
           <button
             onClick={() => scrollTo('products')}
-            className="text-xs font-['Barlow_Condensed'] tracking-widest uppercase text-muted-foreground hover:text-foreground transition-colors"
+            className="text-xs font-['Fredoka'] tracking-widest uppercase text-muted-foreground hover:text-foreground transition-colors"
           >
             Productos
           </button>
           <button
             onClick={() => navigate(isLoggedIn ? '/admin' : '/login')}
-            className={`text-xs font-['Barlow_Condensed'] tracking-widest transition-colors px-2 py-1 border ${
+            className={`text-xs font-['Fredoka'] tracking-widest transition-colors px-2 py-1 border ${
               isLoggedIn
                 ? 'text-foreground border-primary'
                 : 'text-muted-foreground border-border hover:text-foreground hover:border-primary'
@@ -100,7 +100,7 @@ export function Navbar() {
             <button
               key={id}
               onClick={() => scrollTo(id)}
-              className="flex items-center justify-between w-full py-3 px-2 text-left font-['Barlow_Condensed'] text-lg font-700 tracking-widest uppercase text-muted-foreground hover:text-foreground transition-colors"
+              className="flex items-center justify-between w-full py-3 px-2 text-left font-['Fredoka'] text-lg font-700 tracking-widest uppercase text-muted-foreground hover:text-foreground transition-colors"
             >
               {label}
               <ChevronRight size={14} className="text-muted-foreground" />
@@ -112,7 +112,7 @@ export function Navbar() {
               navigate(isLoggedIn ? '/admin' : '/login')
               setMenuOpen(false)
             }}
-            className={`flex items-center justify-between w-full py-3 px-2 text-left font-['Barlow_Condensed'] text-lg font-700 tracking-widest uppercase transition-colors ${
+            className={`flex items-center justify-between w-full py-3 px-2 text-left font-['Fredoka'] text-lg font-700 tracking-widest uppercase transition-colors ${
               isLoggedIn ? 'text-primary' : 'text-muted-foreground hover:text-primary'
             }`}
           >

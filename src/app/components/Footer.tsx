@@ -1,7 +1,7 @@
 import { Instagram, Facebook } from 'lucide-react'
 import { WhatsAppIcon } from './WhatsAppIcon'
 import {
-  LOGO_PATH,
+  MATERIALS,
   SITE_TAGLINE,
   SOCIAL_LINKS,
   INFO_LINKS,
@@ -15,12 +15,7 @@ const SOCIAL_ICONS: Record<string, React.ComponentType<{ size?: number; classNam
   WhatsApp: ({ size, className }) => <WhatsAppIcon size={size ?? 18} className={className} />,
 }
 
-const FOOTER_CATEGORIES = [
-  { id: 'vinilos', name: 'Papel Vinilo', slug: 'vinilos' },
-  { id: 'vinilo-holografico', name: 'Papel Vinilo Holográfico', slug: 'vinilo-holografico' },
-  { id: 'stickers-comun', name: 'Stickers común', slug: 'stickers-comun' },
-  { id: 'vinilo-transparente', name: 'Papel Vinilo Transparente', slug: 'vinilo-transparente' },
-]
+const FOOTER_CATEGORIES = MATERIALS.map((m) => ({ id: m.slug, ...m }))
 
 export function Footer() {
   const scrollTo = (id: string) => {
@@ -60,7 +55,7 @@ export function Footer() {
 
           {/* Shop */}
           <div className="text-center md:text-left">
-            <div className="font-['Barlow_Condensed'] text-sm font-700 tracking-widest uppercase text-foreground mb-4">
+            <div className="font-['Fredoka'] text-sm font-700 tracking-widest uppercase text-foreground mb-4">
               Tienda
             </div>
             <ul className="space-y-3">
@@ -87,7 +82,7 @@ export function Footer() {
 
           {/* Info */}
           <div className="text-center md:text-left">
-            <div className="font-['Barlow_Condensed'] text-sm font-700 tracking-widest uppercase text-foreground mb-4">
+            <div className="font-['Fredoka'] text-sm font-700 tracking-widest uppercase text-foreground mb-4">
               Info
             </div>
             <ul className="space-y-3">
@@ -104,14 +99,14 @@ export function Footer() {
 
         {/* Bottom bar */}
         <div className="border-t border-border pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-muted-foreground font-['Barlow_Condensed'] tracking-wide text-center md:text-left">
+          <p className="text-xs text-muted-foreground font-['Fredoka'] tracking-wide text-center md:text-left">
             {COPYRIGHT}
           </p>
           <div className="flex flex-wrap justify-center gap-4 md:gap-6">
             {LEGAL_LINKS.map((item, i) => (
               <span
                 key={i}
-                className="text-xs text-muted-foreground font-['Barlow_Condensed'] tracking-wider uppercase"
+                className="text-xs text-muted-foreground font-['Fredoka'] tracking-wider uppercase"
               >
                 {item}
               </span>

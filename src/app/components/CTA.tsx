@@ -15,7 +15,7 @@ export function CTA() {
       <div className="bg-primary py-20">
         <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-8">
           <div>
-            <h2 className="font-['Barlow_Condensed'] text-5xl md:text-7xl font-900 uppercase leading-none text-white">
+            <h2 className="font-['Fredoka'] text-5xl md:text-7xl font-900 uppercase leading-none text-white">
               ¿LISTO PARA
               <br />
               DESTACAR?
@@ -29,11 +29,11 @@ export function CTA() {
               onClick={() =>
                 document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' })
               }
-              className="bg-black text-white px-12 py-4 font-['Barlow_Condensed'] text-xl font-900 tracking-widest uppercase hover:bg-white hover:text-black transition-all"
+              className="bg-black text-white px-12 py-4 font-['Fredoka'] text-xl font-900 tracking-widest uppercase hover:bg-white hover:text-black transition-all"
             >
               COMPRAR AHORA →
             </button>
-            <span className="text-white/50 text-xs font-['Barlow_Condensed'] tracking-widest">
+            <span className="text-white/50 text-xs font-['Fredoka'] tracking-widest">
               ENVÍO GRATIS POR MÁS DE $25
             </span>
           </div>
@@ -43,10 +43,10 @@ export function CTA() {
       {/* Follow section */}
       <div className="py-16 bg-background">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <div className="text-xs font-['Barlow_Condensed'] tracking-widest text-primary uppercase mb-3">
+          <div className="text-xs font-['Fredoka'] tracking-widest text-primary uppercase mb-3">
             — SIGUE LA CULTURA
           </div>
-          <h2 className="font-['Barlow_Condensed'] text-3xl md:text-5xl font-900 uppercase leading-none text-foreground mb-8">
+          <h2 className="font-['Fredoka'] text-3xl md:text-5xl font-900 uppercase leading-none text-foreground mb-8">
             ETIQUÉTANOS @MANDARINA.STORE.TUC
           </h2>
 
@@ -63,7 +63,7 @@ export function CTA() {
                   <div className="w-12 h-12 border border-border flex items-center justify-center group-hover:border-primary group-hover:bg-primary transition-all">
                     {Icon && <Icon size={20} className="group-hover:text-white transition-colors" />}
                   </div>
-                  <span className="text-xs font-['Barlow_Condensed'] tracking-widest text-muted-foreground uppercase">
+                  <span className="text-xs font-['Fredoka'] tracking-widest text-muted-foreground uppercase">
                     {label}
                   </span>
                 </a>

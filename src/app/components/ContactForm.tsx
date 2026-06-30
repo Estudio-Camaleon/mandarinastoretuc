@@ -44,10 +44,10 @@ export function ContactForm() {
         <div className="max-w-lg mx-auto">
           {/* Header */}
           <div className="mb-10 text-center">
-            <div className="text-xs font-['Barlow_Condensed'] tracking-widest text-primary uppercase mb-2">
+            <div className="text-xs font-['Fredoka'] tracking-widest text-primary uppercase mb-2">
               — CONTACTO
             </div>
-            <h2 className="font-['Barlow_Condensed'] text-4xl md:text-5xl font-900 uppercase leading-none text-foreground">
+            <h2 className="font-['Fredoka'] text-4xl md:text-5xl font-900 uppercase leading-none text-foreground">
               ESCRIBINOS
             </h2>
             <p className="text-muted-foreground text-sm mt-3 max-w-xs mx-auto">
@@ -58,7 +58,7 @@ export function ContactForm() {
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label htmlFor="contact-name" className="block text-xs font-['Barlow_Condensed'] tracking-widest uppercase text-muted-foreground mb-1.5">
+              <label htmlFor="contact-name" className="block text-xs font-['Fredoka'] tracking-widest uppercase text-muted-foreground mb-1.5">
                 Nombre <span className="text-primary">*</span>
               </label>
               <input
@@ -73,7 +73,7 @@ export function ContactForm() {
             </div>
 
             <div>
-              <label htmlFor="contact-email" className="block text-xs font-['Barlow_Condensed'] tracking-widest uppercase text-muted-foreground mb-1.5">
+              <label htmlFor="contact-email" className="block text-xs font-['Fredoka'] tracking-widest uppercase text-muted-foreground mb-1.5">
                 Email
               </label>
               <input
@@ -87,7 +87,7 @@ export function ContactForm() {
             </div>
 
             <div>
-              <label htmlFor="contact-message" className="block text-xs font-['Barlow_Condensed'] tracking-widest uppercase text-muted-foreground mb-1.5">
+              <label htmlFor="contact-message" className="block text-xs font-['Fredoka'] tracking-widest uppercase text-muted-foreground mb-1.5">
                 Mensaje <span className="text-primary">*</span>
               </label>
               <textarea
@@ -104,7 +104,7 @@ export function ContactForm() {
             <button
               type="submit"
               disabled={formState !== 'idle'}
-              className="w-full bg-primary text-white px-6 py-3 font-['Barlow_Condensed'] text-base font-700 tracking-widest uppercase hover:bg-primary/90 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
+              className="w-full bg-primary text-white px-6 py-3 font-['Fredoka'] text-base font-700 tracking-widest uppercase hover:bg-primary/90 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
             >
               {formState === 'sent' ? (
                 <>

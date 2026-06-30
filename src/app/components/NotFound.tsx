@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { ArrowLeft, Home } from 'lucide-react'
 
-const BG_IMAGE = 'https://images.unsplash.com/photo-1770375142184-4655d2bd2d4e?w=1920&h=1080&fit=crop&auto=format'
+const BG_IMAGE = "/media/logos/404-found.webp"
 
 export function NotFound() {
   const navigate = useNavigate()
@@ -20,12 +20,12 @@ export function NotFound() {
 
       {/* Content */}
       <div className="relative z-10 max-w-lg mx-auto px-4 text-center">
-        <div className="text-[10rem] sm:text-[12rem] font-['Barlow_Condensed'] font-900 leading-none text-primary/20 select-none">
+        <div className="text-[10rem] sm:text-[12rem] font-['Fredoka'] font-900 leading-none text-primary/20 select-none">
           404
         </div>
 
         <div className="-mt-8 sm:-mt-12 space-y-4">
-          <h1 className="font-['Barlow_Condensed'] text-3xl sm:text-4xl font-900 uppercase text-foreground">
+          <h1 className="font-['Fredoka'] text-3xl sm:text-4xl font-900 uppercase text-foreground">
             Página no encontrada
           </h1>
 
@@ -36,14 +36,14 @@ export function NotFound() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4">
             <button
               onClick={() => navigate(-1)}
-              className="border border-border text-foreground px-6 py-3 font-['Barlow_Condensed'] text-sm font-700 tracking-widest uppercase hover:border-primary hover:text-primary transition-colors flex items-center gap-2"
+              className="border border-border text-foreground px-6 py-3 font-['Fredoka'] text-sm font-700 tracking-widest uppercase hover:border-primary hover:text-primary transition-colors flex items-center gap-2"
             >
               <ArrowLeft size={16} />
               VOLVER
             </button>
             <button
               onClick={() => navigate('/')}
-              className="bg-primary text-white px-6 py-3 font-['Barlow_Condensed'] text-sm font-700 tracking-widest uppercase hover:bg-primary/90 transition-colors flex items-center gap-2"
+              className="bg-primary text-white px-6 py-3 font-['Fredoka'] text-sm font-700 tracking-widest uppercase hover:bg-primary/90 transition-colors flex items-center gap-2"
             >
               <Home size={16} />
               IR A LA TIENDA

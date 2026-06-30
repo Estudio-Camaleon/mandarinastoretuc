@@ -41,10 +41,10 @@ export function Testimonials() {
       <div className="max-w-7xl mx-auto px-4">
         {/* Header */}
         <div className="mb-12">
-          <div className="text-xs font-['Barlow_Condensed'] tracking-widest text-primary uppercase mb-2">
+          <div className="text-xs font-['Fredoka'] tracking-widest text-primary uppercase mb-2">
             — OPINIONES REALES
           </div>
-          <h2 className="font-['Barlow_Condensed'] text-4xl md:text-5xl font-900 uppercase leading-none text-foreground">
+          <h2 className="font-['Fredoka'] text-4xl md:text-5xl font-900 uppercase leading-none text-foreground">
             LO QUE LA
             <br />
             CALLE DICE.
@@ -55,7 +55,7 @@ export function Testimonials() {
           {TESTIMONIALS.map((t) => (
             <div
               key={t.id}
-              className="bg-card border border-border p-5 flex flex-col justify-between hover:border-primary/40 transition-colors rounded-xl"
+              className="bg-card border border-border p-5 flex flex-col justify-between hover:border-primary/40 transition-colors rounded-3xl"
             >
               <div>
                 <div className="flex mb-3">
@@ -67,13 +67,13 @@ export function Testimonials() {
               </div>
               <div>
                 <div className="border-t border-border pt-4">
-                  <div className="font-['Barlow_Condensed'] font-700 text-foreground uppercase tracking-wide">
+                  <div className="font-['Fredoka'] font-700 text-foreground uppercase tracking-wide">
                     {t.name}
                   </div>
-                  <div className="text-xs text-primary font-['Barlow_Condensed'] tracking-widest">
+                  <div className="text-xs text-primary font-['Fredoka'] tracking-widest">
                     {t.handle}
                   </div>
-                  <div className="text-[10px] text-muted-foreground mt-1 font-['Barlow_Condensed'] uppercase tracking-wider">
+                  <div className="text-[10px] text-muted-foreground mt-1 font-['Fredoka'] uppercase tracking-wider">
                     {t.product}
                   </div>
                 </div>
@@ -83,7 +83,7 @@ export function Testimonials() {
         </div>
 
         {/* Social proof bar */}
-        <div className="mt-10 border border-border p-5 grid grid-cols-2 md:grid-cols-4 gap-5 bg-card rounded-xl">
+        <div className="mt-10 border border-border p-5 grid grid-cols-2 md:grid-cols-4 gap-5 bg-card rounded-3xl">
           {[
             { emoji: '⭐', value: '4.9 / 5', label: 'Valoración media' },
             { emoji: '📦', value: '10,000+', label: 'Clientes felices' },
@@ -92,8 +92,8 @@ export function Testimonials() {
           ].map(({ emoji, value, label }) => (
             <div key={label} className="text-center">
               <div className="text-2xl mb-1">{emoji}</div>
-              <div className="font-['Barlow_Condensed'] text-xl font-900 text-primary">{value}</div>
-              <div className="text-xs text-muted-foreground font-['Barlow_Condensed'] tracking-wider uppercase">
+              <div className="font-['Fredoka'] text-xl font-900 text-primary">{value}</div>
+              <div className="text-xs text-muted-foreground font-['Fredoka'] tracking-wider uppercase">
                 {label}
               </div>
             </div>
