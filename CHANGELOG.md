@@ -1,3 +1,9 @@
+## [1.5.0](https://github.com/Estudio-Camaleon/mandarinastoretuc/compare/v1.4.0...v1.5.0) (2026-06-30)
+
+### Features
+
+* material card animations, design categories with images, cascade filtering, hero rainbow title, admin form updates ([646e376](https://github.com/Estudio-Camaleon/mandarinastoretuc/commit/646e3766a3838fcd294d5ae1984ef4e2e15ed41a))
+
 ## [1.4.0](https://github.com/Estudio-Camaleon/mandarinastoretuc/compare/v1.3.0...v1.4.0) (2026-06-30)
 
 ### Features
