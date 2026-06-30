@@ -1,3 +1,9 @@
+## [1.4.0](https://github.com/Estudio-Camaleon/mandarinastoretuc/compare/v1.3.0...v1.4.0) (2026-06-30)
+
+### Features
+
+* Hero redesign, 404 page, contact form, and category refactor ([5bb406f](https://github.com/Estudio-Camaleon/mandarinastoretuc/commit/5bb406f9698a9054c46cc824b3bc77fc1e6e2698))
+
 ## [1.3.0](https://github.com/Estudio-Camaleon/mandarinastoretuc/compare/v1.2.0...v1.3.0) (2026-06-11)
 
 ### Features
