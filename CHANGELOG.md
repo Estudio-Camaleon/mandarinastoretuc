@@ -1,3 +1,9 @@
+## [1.6.0](https://github.com/Estudio-Camaleon/mandarinastoretuc/compare/v1.5.0...v1.6.0) (2026-06-30)
+
+### Features
+
+* mascot images, category designs, UI component updates and style improvements ([0b0f851](https://github.com/Estudio-Camaleon/mandarinastoretuc/commit/0b0f85128fbd1f045d3cf6ed337d1c7dcb6c2003))
+
 ## [1.5.0](https://github.com/Estudio-Camaleon/mandarinastoretuc/compare/v1.4.0...v1.5.0) (2026-06-30)
 
 ### Features
