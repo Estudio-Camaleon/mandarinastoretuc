@@ -1,13 +1,10 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Eye, EyeOff, Lock } from 'lucide-react'
 import { supabase } from '../../../lib/supabase'
 
-interface AdminLoginProps {
-  onLogin: () => void
-  onBack: () => void
-}
-
-export function AdminLogin({ onLogin, onBack }: AdminLoginProps) {
+export function AdminLogin() {
+  const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPw, setShowPw] = useState(false)
@@ -16,6 +13,7 @@ export function AdminLogin({ onLogin, onBack }: AdminLoginProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (loading) return
     setLoading(true)
     setError('')
 
@@ -26,11 +24,11 @@ export function AdminLogin({ onLogin, onBack }: AdminLoginProps) {
 
     if (authError) {
       setError(authError.message)
-    } else {
-      onLogin()
+      setLoading(false)
+      return
     }
 
-    setLoading(false)
+    navigate('/admin')
   }
 
   return (
@@ -66,6 +64,7 @@ export function AdminLogin({ onLogin, onBack }: AdminLoginProps) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                autoComplete="email"
                 placeholder="admin@mandarinastore.com"
                 className="w-full bg-secondary border border-border px-4 py-3 text-foreground text-sm placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary transition-colors"
               />
@@ -81,6 +80,7 @@ export function AdminLogin({ onLogin, onBack }: AdminLoginProps) {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
+                  autoComplete="current-password"
                   placeholder="••••••••"
                   className="w-full bg-secondary border border-border px-4 py-3 pr-10 text-foreground text-sm placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary transition-colors"
                 />
@@ -117,7 +117,7 @@ export function AdminLogin({ onLogin, onBack }: AdminLoginProps) {
         </div>
 
         <button
-          onClick={onBack}
+          onClick={() => navigate('/')}
           className="w-full mt-4 text-xs font-['Barlow_Condensed'] tracking-widest uppercase text-muted-foreground hover:text-foreground transition-colors py-2"
         >
           ← VOLVER A LA TIENDA

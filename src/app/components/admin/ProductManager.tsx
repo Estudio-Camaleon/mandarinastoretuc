@@ -14,24 +14,27 @@ import {
 import { toast } from 'sonner'
 import { ImageWithFallback } from '../ImageWithFallback'
 import type { Product } from '../Products'
-import type { Category } from '../../../lib/database.types'
 import { createProduct, updateProduct, deleteProduct, uploadImage } from '../../../lib/api'
+import { FIXED_CATEGORIES } from '../../../lib/site'
 
 interface ProductManagerProps {
   products: Product[]
-  categories: Category[]
   onRefresh: () => void
 }
 
 type SortKey = 'name' | 'price' | 'category'
 type SortDir = 'asc' | 'desc'
 
-const EMPTY_FORM: Omit<Product, 'id'> = {
+const EMPTY_FORM: Omit<Product, 'id' | 'created_at'> = {
   name: '',
   price: 0,
   category: '',
   description: '',
   image: '',
+  material: 'Vinilo',
+  finish: 'Mate',
+  size: '7.5 × 5 cm',
+  waterproof: true,
   rating: 5,
   reviews: 0,
 }
@@ -52,7 +55,7 @@ function SortIcon({
   return sortDir === 'asc' ? <ArrowUp size={12} /> : <ArrowDown size={12} />
 }
 
-export function ProductManager({ products, categories, onRefresh }: ProductManagerProps) {
+export function ProductManager({ products, onRefresh }: ProductManagerProps) {
   const [showForm, setShowForm] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [form, setForm] = useState<Omit<Product, 'id'>>(EMPTY_FORM)
@@ -110,6 +113,10 @@ export function ProductManager({ products, categories, onRefresh }: ProductManag
       category: product.category,
       description: product.description,
       image: product.image,
+      material: product.material,
+      finish: product.finish,
+      size: product.size,
+      waterproof: product.waterproof,
       rating: product.rating,
       reviews: product.reviews,
     })
@@ -523,8 +530,8 @@ export function ProductManager({ products, categories, onRefresh }: ProductManag
                     }`}
                   >
                     <option value="">Seleccionar...</option>
-                    {categories.map((cat) => (
-                      <option key={cat.id} value={cat.slug}>
+                    {FIXED_CATEGORIES.map((cat) => (
+                      <option key={cat.slug} value={cat.slug}>
                         {cat.name}
                       </option>
                     ))}
@@ -569,6 +576,82 @@ export function ProductManager({ products, categories, onRefresh }: ProductManag
                     {errors.description}
                   </div>
                 )}
+              </div>
+
+              {/* Material + Finish + Size */}
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-xs font-['Barlow_Condensed'] tracking-widest uppercase text-muted-foreground mb-2">
+                    Material
+                  </label>
+                  <select
+                    value={form.material}
+                    onChange={(e) => {
+                      setForm((f) => ({ ...f, material: e.target.value }))
+                      setFormDirty(true)
+                    }}
+                    className="w-full bg-secondary border border-border px-3 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors"
+                  >
+                    <option value="Vinilo">Vinilo</option>
+                    <option value="Vinilo Premium">Vinilo Premium</option>
+                    <option value="Vinilo Reflectivo">Vinilo Reflectivo</option>
+                    <option value="Vinilo Transparente">Vinilo Transparente</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-['Barlow_Condensed'] tracking-widest uppercase text-muted-foreground mb-2">
+                    Acabado
+                  </label>
+                  <select
+                    value={form.finish}
+                    onChange={(e) => {
+                      setForm((f) => ({ ...f, finish: e.target.value }))
+                      setFormDirty(true)
+                    }}
+                    className="w-full bg-secondary border border-border px-3 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors"
+                  >
+                    <option value="Mate">Mate</option>
+                    <option value="Brillante">Brillante</option>
+                    <option value="Holográfico">Holográfico</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-['Barlow_Condensed'] tracking-widest uppercase text-muted-foreground mb-2">
+                    Tamaño
+                  </label>
+                  <select
+                    value={form.size}
+                    onChange={(e) => {
+                      setForm((f) => ({ ...f, size: e.target.value }))
+                      setFormDirty(true)
+                    }}
+                    className="w-full bg-secondary border border-border px-3 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors"
+                  >
+                    <option value="5 × 5 cm">5 × 5 cm</option>
+                    <option value="7.5 × 5 cm">7.5 × 5 cm</option>
+                    <option value="10 × 10 cm">10 × 10 cm</option>
+                    <option value="15 × 10 cm">15 × 10 cm</option>
+                    <option value="20 × 15 cm">20 × 15 cm</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Waterproof toggle */}
+              <div className="flex items-center gap-3">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={form.waterproof}
+                    onChange={(e) => {
+                      setForm((f) => ({ ...f, waterproof: e.target.checked }))
+                      setFormDirty(true)
+                    }}
+                    className="w-4 h-4 rounded border-border bg-secondary text-primary focus:ring-primary"
+                  />
+                  <span className="text-xs font-['Barlow_Condensed'] tracking-widest uppercase text-muted-foreground">
+                    Impermeable
+                  </span>
+                </label>
               </div>
 
               {/* Actions */}
@@ -659,7 +742,7 @@ export function ProductManager({ products, categories, onRefresh }: ProductManag
                 onClick={() => setDeleteId(null)}
                 className="flex-1 border border-border text-foreground py-2.5 font-['Barlow_Condensed'] font-700 uppercase tracking-widest hover:bg-secondary transition-colors"
               >
-                CANCEL
+                CANCELAR
               </button>
             </div>
           </div>

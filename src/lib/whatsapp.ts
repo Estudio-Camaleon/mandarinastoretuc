@@ -4,22 +4,10 @@ export function waLink(message: string): string {
   return `https://wa.me/${PHONE}?text=${encodeURIComponent(message)}`
 }
 
-export function productMessage(name: string, price: number, qty = 1): string {
-  const total = (price * qty).toFixed(2)
+export function productInquiryMessage(name: string, price: number): string {
   return [
-    `¡Hola! Quiero pedir:`,
-    `- ${name} x${qty} = $${total}`,
-    '',
-    `Total: $${total}`,
+    '¡Hola! Quiero consultar por este producto:',
+    `- ${name}`,
+    `- Precio: $${price.toFixed(2)}`,
   ].join('\n')
-}
-
-export function cartMessage(
-  items: { name: string; price: number; qty: number }[],
-): string {
-  const lines = items.map(
-    (i) => `- ${i.name} x${i.qty} = $${(i.price * i.qty).toFixed(2)}`,
-  )
-  const total = items.reduce((s, i) => s + i.price * i.qty, 0)
-  return [`¡Hola! Quiero pedir:`, ...lines, '', `Total: $${total.toFixed(2)}`].join('\n')
 }

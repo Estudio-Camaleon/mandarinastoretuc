@@ -1,51 +1,50 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   LayoutDashboard,
   Package,
-  Tag,
-  ShoppingBag,
   LogOut,
   Menu,
   X,
   ChevronRight,
 } from 'lucide-react'
+import { supabase } from '../../../lib/supabase'
 import type { Product } from '../Products'
-import type { Category } from '../../../lib/database.types'
 import { Dashboard } from './Dashboard'
 import { ProductManager } from './ProductManager'
-import { CategoryManager } from './CategoryManager'
-import { OrderViewer } from './OrderViewer'
 
 interface AdminPanelProps {
   products: Product[]
-  categories: Category[]
   onRefresh: () => void
-  onLogout: () => void
 }
 
-type AdminView = 'dashboard' | 'products' | 'categories' | 'orders'
+type AdminView = 'dashboard' | 'products'
 
 const NAV_ITEMS: { id: AdminView; label: string; Icon: React.FC<{ size?: number }> }[] = [
   { id: 'dashboard', label: 'Panel', Icon: LayoutDashboard },
   { id: 'products', label: 'Productos', Icon: Package },
-  { id: 'categories', label: 'Categorías', Icon: Tag },
-  { id: 'orders', label: 'Órdenes', Icon: ShoppingBag },
 ]
 
-export function AdminPanel({ products, categories, onRefresh, onLogout }: AdminPanelProps) {
+export function AdminPanel({ products, onRefresh }: AdminPanelProps) {
+  const navigate = useNavigate()
   const [view, setView] = useState<AdminView>('dashboard')
   const [sidebarOpen, setSidebarOpen] = useState(false)
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut()
+    navigate('/')
+  }
+
+  const goToStore = () => {
+    navigate('/')
+  }
 
   const renderView = () => {
     switch (view) {
       case 'dashboard':
-        return <Dashboard products={products} categories={categories} onNavigate={setView} />
+        return <Dashboard products={products} onNavigate={setView} />
       case 'products':
-        return <ProductManager products={products} categories={categories} onRefresh={onRefresh} />
-      case 'categories':
-        return <CategoryManager categories={categories} products={products} onRefresh={onRefresh} />
-      case 'orders':
-        return <OrderViewer />
+        return <ProductManager products={products} onRefresh={onRefresh} />
     }
   }
 
@@ -103,7 +102,7 @@ export function AdminPanel({ products, categories, onRefresh, onLogout }: AdminP
         {/* Logout */}
         <div className="p-3 border-t border-border">
           <button
-            onClick={onLogout}
+            onClick={handleLogout}
             className="w-full flex items-center gap-3 px-3 py-2.5 text-muted-foreground hover:text-destructive transition-colors text-sm font-['Barlow_Condensed'] uppercase tracking-wide"
           >
             <LogOut size={16} />
@@ -145,7 +144,7 @@ export function AdminPanel({ products, categories, onRefresh, onLogout }: AdminP
             )}
           </div>
           <button
-            onClick={onLogout}
+            onClick={goToStore}
             className="text-xs font-['Barlow_Condensed'] tracking-widest uppercase text-muted-foreground hover:text-foreground transition-colors hidden md:block"
           >
             ← VOLVER A LA TIENDA

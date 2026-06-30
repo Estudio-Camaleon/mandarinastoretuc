@@ -1,15 +1,14 @@
 import { useState, useEffect } from 'react'
-import { Package, Tag, ShoppingBag, TrendingUp, ArrowRight } from 'lucide-react'
+import { Package, ShoppingBag, TrendingUp, ArrowRight } from 'lucide-react'
 import { Skeleton } from '../ui/skeleton'
 import type { Product } from '../Products'
-import type { Category } from '../../../lib/database.types'
 import { fetchOrders } from '../../../lib/api'
+import { FIXED_CATEGORIES } from '../../../lib/site'
 
-type AdminView = 'dashboard' | 'products' | 'categories' | 'orders'
+type AdminView = 'dashboard' | 'products'
 
 interface DashboardProps {
   products: Product[]
-  categories: Category[]
   onNavigate: (view: AdminView) => void
 }
 
@@ -47,13 +46,13 @@ function StatCard({
         {label}
       </div>
       <div className="text-primary opacity-0 group-hover:opacity-100 transition-opacity text-xs font-['Barlow_Condensed'] uppercase tracking-widest mt-2">
-        MANAGE →
+        GESTIONAR →
       </div>
     </button>
   )
 }
 
-export function Dashboard({ products, categories, onNavigate }: DashboardProps) {
+export function Dashboard({ products, onNavigate }: DashboardProps) {
   const [orders, setOrders] = useState<
     {
       id: string
@@ -65,10 +64,11 @@ export function Dashboard({ products, categories, onNavigate }: DashboardProps) 
       date: string
     }[]
   >([])
-  const [ordersLoading, setOrdersLoading] = useState(true)
+  const [ordersLoading, setOrdersLoading] = useState(false)
 
   useEffect(() => {
     ;(async () => {
+      setOrdersLoading(true)
       try {
         const data = await fetchOrders()
         setOrders(
@@ -110,17 +110,17 @@ export function Dashboard({ products, categories, onNavigate }: DashboardProps) 
         />
         <StatCard
           label="Categorías"
-          value={categories.length}
-          Icon={Tag}
+          value={FIXED_CATEGORIES.length}
+          Icon={Package}
           color="text-blue-400"
-          action={() => onNavigate('categories')}
+          action={() => {}}
         />
         <StatCard
           label="Órdenes"
           value={ordersLoading ? '...' : orders.length}
           Icon={ShoppingBag}
           color="text-green-400"
-          action={() => onNavigate('orders')}
+          action={() => {}}
         />
         <StatCard
           label="Ingresos"
@@ -138,10 +138,7 @@ export function Dashboard({ products, categories, onNavigate }: DashboardProps) 
             <div className="font-['Barlow_Condensed'] font-700 uppercase tracking-wide text-foreground">
               Órdenes Recientes
             </div>
-            <button
-              onClick={() => onNavigate('orders')}
-              className="text-xs text-primary font-['Barlow_Condensed'] uppercase tracking-widest flex items-center gap-1 hover:gap-2 transition-all"
-            >
+            <button className="text-xs text-primary font-['Barlow_Condensed'] uppercase tracking-widest flex items-center gap-1 hover:gap-2 transition-all">
               VER TODO <ArrowRight size={12} />
             </button>
           </div>
@@ -206,44 +203,32 @@ export function Dashboard({ products, categories, onNavigate }: DashboardProps) 
 
         {/* Category breakdown */}
         <div className="bg-card border border-border">
-          <div className="px-5 py-4 border-b border-border flex items-center justify-between">
+          <div className="px-5 py-4 border-b border-border">
             <div className="font-['Barlow_Condensed'] font-700 uppercase tracking-wide text-foreground">
               Por Categoría
             </div>
-            <button
-              onClick={() => onNavigate('categories')}
-              className="text-xs text-primary font-['Barlow_Condensed'] uppercase tracking-widest flex items-center gap-1 hover:gap-2 transition-all"
-            >
-              EDITAR <ArrowRight size={12} />
-            </button>
           </div>
           <div className="p-5 space-y-3">
-            {categories.length === 0 ? (
-              <div className="text-muted-foreground text-sm font-['Barlow_Condensed'] uppercase tracking-widest">
-                Aún no hay categorías
-              </div>
-            ) : (
-              categories.map((cat) => {
-                const count = products.filter((p) => p.category === cat.slug).length
-                const pct = products.length ? Math.round((count / products.length) * 100) : 0
-                return (
-                  <div key={cat.id}>
-                    <div className="flex justify-between text-xs mb-1">
-                      <span className="font-['Barlow_Condensed'] uppercase tracking-wider text-foreground">
-                        {cat.name}
-                      </span>
-                      <span className="text-muted-foreground">{count} productos</span>
-                    </div>
-                    <div className="w-full bg-secondary h-1.5">
-                      <div
-                        className="h-full bg-primary transition-all duration-500"
-                        style={{ width: `${pct}%` }}
-                      />
-                    </div>
+            {FIXED_CATEGORIES.map((cat) => {
+              const count = products.filter((p) => p.category === cat.slug).length
+              const pct = products.length ? Math.round((count / products.length) * 100) : 0
+              return (
+                <div key={cat.slug}>
+                  <div className="flex justify-between text-xs mb-1">
+                    <span className="font-['Barlow_Condensed'] uppercase tracking-wider text-foreground">
+                      {cat.name}
+                    </span>
+                    <span className="text-muted-foreground">{count} productos</span>
                   </div>
-                )
-              })
-            )}
+                  <div className="w-full bg-secondary h-1.5">
+                    <div
+                      className="h-full bg-primary transition-all duration-500"
+                      style={{ width: `${pct}%` }}
+                    />
+                  </div>
+                </div>
+              )
+            })}
           </div>
         </div>
       </div>
@@ -259,16 +244,6 @@ export function Dashboard({ products, categories, onNavigate }: DashboardProps) 
               label: 'Agregar Producto',
               action: () => onNavigate('products'),
               desc: 'Subir un nuevo diseño vinílico',
-            },
-            {
-              label: 'Nueva Categoría',
-              action: () => onNavigate('categories'),
-              desc: 'Crear una colección',
-            },
-            {
-              label: 'Ver Órdenes',
-              action: () => onNavigate('orders'),
-              desc: 'Revisar solicitudes de compra',
             },
             {
               label: 'Todos los Productos',

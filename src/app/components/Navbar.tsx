@@ -1,17 +1,33 @@
-import { useState } from 'react'
-import { ShoppingCart, Menu, X } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
+import { Menu, X, ChevronRight } from 'lucide-react'
+import { useAuth } from '../components/admin/AuthContext'
 
-interface NavbarProps {
-  cartCount: number
-  onAdminClick: () => void
-  onCartClick: () => void
-}
-
-export function Navbar({ cartCount, onAdminClick, onCartClick }: NavbarProps) {
+export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [reducedMotion, setReducedMotion] = useState(false)
+  const navigate = useNavigate()
+  const location = useLocation()
+  const { session } = useAuth()
+  const isLoggedIn = !!session
+
+  useEffect(() => {
+    setReducedMotion(window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+  }, [])
 
   const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+    if (location.pathname !== '/') {
+      navigate('/')
+      setTimeout(() => {
+        document.getElementById(id)?.scrollIntoView({
+          behavior: reducedMotion ? 'auto' : 'smooth',
+        })
+      }, 100)
+    } else {
+      document.getElementById(id)?.scrollIntoView({
+        behavior: reducedMotion ? 'auto' : 'smooth',
+      })
+    }
     setMenuOpen(false)
   }
 
@@ -21,84 +37,90 @@ export function Navbar({ cartCount, onAdminClick, onCartClick }: NavbarProps) {
         {/* Logo */}
         <button onClick={() => scrollTo('hero')} className="flex items-center">
           <img
-            src="/media/logos/sticker_mandarina.png"
+            src="/media/logos/Mandarina_logo_v2.svg"
             alt="MandarinaStore"
-            className="h-9 md:h-9 w-auto"
+            className="h-9 w-auto"
           />
         </button>
 
         {/* Desktop nav */}
-        <div className="hidden md:flex items-center gap-8">
-          {[
-            { label: 'TIENDA', id: 'products' },
-            { label: 'COLECCIONES', id: 'categories' },
-          ].map((item) => (
-            <button
-              key={item.id}
-              onClick={() => scrollTo(item.id)}
-              className="text-sm font-['Barlow_Condensed'] font-700 tracking-widest text-muted-foreground hover:text-foreground transition-colors"
-            >
-              {item.label}
-            </button>
-          ))}
+        <div className="hidden md:flex items-center gap-6">
+          <button
+            onClick={() => scrollTo('hero')}
+            className="text-xs font-['Barlow_Condensed'] tracking-widest uppercase text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Inicio
+          </button>
+          <button
+            onClick={() => scrollTo('categories')}
+            className="text-xs font-['Barlow_Condensed'] tracking-widest uppercase text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Colecciones
+          </button>
+          <button
+            onClick={() => scrollTo('products')}
+            className="text-xs font-['Barlow_Condensed'] tracking-widest uppercase text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Productos
+          </button>
+          <button
+            onClick={() => navigate(isLoggedIn ? '/admin' : '/login')}
+            className={`text-xs font-['Barlow_Condensed'] tracking-widest transition-colors px-2 py-1 border ${
+              isLoggedIn
+                ? 'text-foreground border-primary'
+                : 'text-muted-foreground border-border hover:text-foreground hover:border-primary'
+            }`}
+          >
+            {isLoggedIn ? 'PANEL' : 'ADMIN'}
+          </button>
         </div>
 
-        {/* Right actions */}
-        <div className="flex items-center gap-3">
-          <button
-            onClick={onCartClick}
-            className="relative p-2 hover:text-primary transition-colors"
-            aria-label="Cart"
-          >
-            <ShoppingCart size={20} />
-            {cartCount > 0 && (
-              <span className="absolute -top-1 -right-1 w-4 h-4 bg-primary text-white text-[10px] font-black rounded-full flex items-center justify-center">
-                {cartCount}
-              </span>
-            )}
-          </button>
-          <button
-            onClick={onAdminClick}
-            className="hidden md:block text-xs font-['Barlow_Condensed'] tracking-widest text-muted-foreground hover:text-foreground transition-colors px-2 py-1 border border-border hover:border-primary"
-          >
-            ADMIN
-          </button>
-          <button
-            className="md:hidden p-2"
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="Toggle menu"
-          >
-            {menuOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
-        </div>
+        {/* Mobile hamburger */}
+        <button
+          className="md:hidden p-3 -mr-3"
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Toggle menu"
+        >
+          {menuOpen ? <X size={20} /> : <Menu size={20} />}
+        </button>
       </div>
 
       {/* Mobile menu */}
-      {menuOpen && (
-        <div className="md:hidden bg-card border-t border-border px-4 py-4 flex flex-col gap-4">
+      <div
+        className={`md:hidden bg-card border-t border-border overflow-hidden transition-all duration-300 ${
+          menuOpen ? 'max-h-80 opacity-100' : 'max-h-0 opacity-0'
+        }`}
+      >
+        <div className="px-4 py-3 flex flex-col gap-1">
           {[
-            { label: 'TIENDA', id: 'products' },
-            { label: 'COLECCIONES', id: 'categories' },
-          ].map((item) => (
+            { label: 'Inicio', id: 'hero' },
+            { label: 'Colecciones', id: 'categories' },
+            { label: 'Productos', id: 'products' },
+          ].map(({ label, id }) => (
             <button
-              key={item.id}
-              onClick={() => scrollTo(item.id)}
-              className="text-left font-['Barlow_Condensed'] text-lg font-700 tracking-widest text-muted-foreground hover:text-foreground transition-colors"
+              key={id}
+              onClick={() => scrollTo(id)}
+              className="flex items-center justify-between w-full py-3 px-2 text-left font-['Barlow_Condensed'] text-lg font-700 tracking-widest uppercase text-muted-foreground hover:text-foreground transition-colors"
             >
-              {item.label}
+              {label}
+              <ChevronRight size={14} className="text-muted-foreground" />
             </button>
           ))}
+          <div className="border-t border-border my-1" />
           <button
             onClick={() => {
-              onAdminClick()
+              navigate(isLoggedIn ? '/admin' : '/login')
               setMenuOpen(false)
             }}
-            className="text-left font-['Barlow_Condensed'] text-lg font-700 tracking-widest text-muted-foreground hover:text-primary transition-colors"
+            className={`flex items-center justify-between w-full py-3 px-2 text-left font-['Barlow_Condensed'] text-lg font-700 tracking-widest uppercase transition-colors ${
+              isLoggedIn ? 'text-primary' : 'text-muted-foreground hover:text-primary'
+            }`}
           >
-            ADMIN
+            {isLoggedIn ? 'PANEL' : 'ADMIN'}
+            <ChevronRight size={14} className="text-muted-foreground" />
           </button>
         </div>
-      )}
+      </div>
     </nav>
   )
 }

@@ -1,45 +1,76 @@
 import { useState, useEffect } from 'react'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import { Navbar } from './components/Navbar'
 import { Hero } from './components/Hero'
 import { Categories } from './components/Categories'
 import { Products } from './components/Products'
 import type { Product } from './components/Products'
+import { ContactForm } from './components/ContactForm'
+import { NotFound } from './components/NotFound'
 import { Footer } from './components/Footer'
-import { CartDrawer } from './components/CartDrawer'
-import { Toaster } from './components/ui/sonner'
 import { AdminLogin } from './components/admin/AdminLogin'
 import { AdminPanel } from './components/admin/AdminPanel'
-import { supabase } from '../lib/supabase'
-import { fetchProducts, fetchCategories } from '../lib/api'
-import type { Category } from '../lib/database.types'
+import { useAuth } from './components/admin/AuthContext'
+import { fetchProducts } from '../lib/api'
 
-interface CartItem extends Product {
-  qty: number
+export type AppView = 'public' | 'admin-login' | 'admin'
+export type AuthState = 'loading' | 'authenticated' | 'unauthenticated'
+
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { session, loading } = useAuth()
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="font-['Barlow_Condensed'] text-lg text-muted-foreground uppercase tracking-widest">
+          Cargando sesión...
+        </div>
+      </div>
+    )
+  }
+
+  if (!session) {
+    return <Navigate to="/login" replace />
+  }
+
+  return <>{children}</>
 }
 
-type AppView = 'public' | 'admin-login' | 'admin'
-
-type AuthState = 'loading' | 'authenticated' | 'unauthenticated'
+function PublicLayout({
+  products,
+  activeCategory,
+  onCategorySelect,
+}: {
+  products: Product[]
+  activeCategory: string
+  onCategorySelect: (slug: string) => void
+}) {
+  return (
+    <>
+      <Navbar />
+      <Hero />
+      <Categories
+        activeCategory={activeCategory}
+        onCategorySelect={onCategorySelect}
+        products={products}
+      />
+      <Products products={products} activeCategory={activeCategory} />
+      <ContactForm />
+      <Footer />
+    </>
+  )
+}
 
 export default function App() {
-  const [view, setView] = useState<AppView>('public')
-  const [authState, setAuthState] = useState<AuthState>('loading')
   const [products, setProducts] = useState<Product[]>([])
-  const [categories, setCategories] = useState<Category[]>([])
   const [dataLoading, setDataLoading] = useState(true)
   const [activeCategory, setActiveCategory] = useState('all')
-  const [cart, setCart] = useState<CartItem[]>([])
-  const [cartOpen, setCartOpen] = useState(false)
 
   const loadData = async () => {
     try {
       setDataLoading(true)
-      const [productsData, categoriesData] = await Promise.all([
-        fetchProducts(),
-        fetchCategories(),
-      ])
+      const productsData = await fetchProducts()
       setProducts(productsData)
-      setCategories(categoriesData)
     } catch (err) {
       console.error('Failed to load data:', err)
     } finally {
@@ -48,130 +79,63 @@ export default function App() {
   }
 
   useEffect(() => {
-    // Check existing session on mount
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        setView('admin')
-        setAuthState('authenticated')
-      } else {
-        setAuthState('unauthenticated')
-      }
-    })
-
-    // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session) {
-        setView('admin')
-        setAuthState('authenticated')
-      } else {
-        setView('public')
-        setAuthState('unauthenticated')
-      }
-    })
-
     loadData()
-
-    return () => subscription.unsubscribe()
   }, [])
 
-  const addToCart = (product: Product) => {
-    setCart((prev) => {
-      const existing = prev.find((i) => i.id === product.id)
-      if (existing) {
-        return prev.map((i) => (i.id === product.id ? { ...i, qty: i.qty + 1 } : i))
-      }
-      return [...prev, { ...product, qty: 1 }]
-    })
-  }
+  const noiseOverlay = (
+    <div
+      className="fixed inset-0 z-0 pointer-events-none opacity-[0.03] mix-blend-overlay"
+      style={{
+        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+        backgroundRepeat: 'repeat',
+        backgroundSize: '256px 256px',
+      }}
+    />
+  )
 
-  const removeFromCart = (id: string) => {
-    setCart((prev) => prev.filter((i) => i.id !== id))
-  }
-
-  const updateCartQty = (id: string, qty: number) => {
-    setCart((prev) => prev.map((i) => (i.id === id ? { ...i, qty } : i)))
-  }
-
-  const cartCount = cart.reduce((s, i) => s + i.qty, 0)
-
-  const content = (() => {
-    if (view === 'admin-login') {
-      return <AdminLogin onLogin={() => setView('admin')} onBack={() => setView('public')} />
-    }
-
-    if (view === 'admin') {
-      return (
-        <AdminPanel
-          products={products}
-          categories={categories}
-          onRefresh={loadData}
-          onLogout={async () => {
-            await supabase.auth.signOut()
-            setView('public')
-          }}
-        />
-      )
-    }
-
-    if (authState === 'loading' || dataLoading) {
-      return (
-        <div className="min-h-screen bg-background flex items-center justify-center">
+  if (dataLoading) {
+    return (
+      <div className="min-h-screen bg-background text-foreground relative">
+        {noiseOverlay}
+        <div className="relative z-10 min-h-screen flex items-center justify-center">
           <div className="font-['Barlow_Condensed'] text-lg text-muted-foreground uppercase tracking-widest">
             Cargando...
           </div>
         </div>
-      )
-    }
-
-    return (
-      <>
-        <Navbar
-          cartCount={cartCount}
-          onAdminClick={() => setView('admin-login')}
-          onCartClick={() => setCartOpen(true)}
-        />
-
-        <Hero />
-
-        <Categories
-          categories={categories}
-          activeCategory={activeCategory}
-          onCategorySelect={setActiveCategory}
-        />
-
-        <Products products={products} activeCategory={activeCategory} onAddToCart={addToCart} />
-
-        <Footer categories={categories} />
-
-        {cartOpen && (
-          <CartDrawer
-            items={cart}
-            onClose={() => setCartOpen(false)}
-            onRemove={removeFromCart}
-            onUpdateQty={updateCartQty}
-          />
-        )}
-      </>
+      </div>
     )
-  })()
+  }
 
   return (
     <div className="min-h-screen bg-background text-foreground relative">
-      {/* Noise overlay */}
-      <div
-        className="fixed inset-0 z-0 pointer-events-none opacity-[0.03] mix-blend-overlay"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
-          backgroundRepeat: 'repeat',
-          backgroundSize: '256px 256px',
-        }}
-      />
+      {noiseOverlay}
       <div className="relative z-10">
-        {content}
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <PublicLayout
+                products={products}
+                activeCategory={activeCategory}
+                onCategorySelect={setActiveCategory}
+              />
+            }
+          />
+          <Route path="/login" element={<AdminLogin />} />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <AdminPanel
+                  products={products}
+                  onRefresh={loadData}
+                />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
       </div>
-      <Toaster />
     </div>
   )
 }

@@ -1,13 +1,14 @@
 import { Instagram, Facebook } from 'lucide-react'
-import { ImageWithFallback } from './ImageWithFallback'
 import { WhatsAppIcon } from './WhatsAppIcon'
 import { SOCIAL_LINKS, LOGO_PATH } from '../../lib/site'
 
-const SOCIAL_ICONS: Record<string, React.ComponentType<{ size?: number }>> = {
+const SOCIAL_ICONS: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
   Instagram,
   Facebook,
-  WhatsApp: ({ size }) => <WhatsAppIcon size={size ?? 18} />,
+  WhatsApp: ({ size, className }) => <WhatsAppIcon size={size ?? 18} className={className} />,
 }
+
+const DECORATIVE_LINE = 'M0 0 L50 25 L100 0'
 
 export function Hero() {
   const scrollToProducts = () => {
@@ -15,52 +16,54 @@ export function Hero() {
   }
 
   return (
-    <section id="hero" className="relative min-h-screen flex items-center overflow-hidden pt-14">
-      {/* Background image */}
+    <section id="hero" className="relative min-h-[100dvh] flex items-center overflow-hidden pt-14">
+      {/* Subtle decorative background */}
       <div className="absolute inset-0 z-0">
-        <ImageWithFallback
-          src="https://images.unsplash.com/photo-1774124031693-a585cf5e4771?w=1920&h=1080&fit=crop&auto=format"
-          alt="Graffiti and stickers on urban wall"
-          className="w-full h-full object-cover opacity-20"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-background/60 to-background" />
+        <svg className="w-full h-full opacity-[0.04]" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <defs>
+            <pattern id="dots" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+              <circle cx="2" cy="2" r="1" fill="currentColor" />
+            </pattern>
+          </defs>
+          <rect width="100" height="100" fill="url(#dots)" />
+        </svg>
       </div>
 
-      {/* Diagonal orange accent bar */}
-      <div
-        className="absolute top-0 right-0 w-1/3 h-full bg-primary/5 z-0"
-        style={{ clipPath: 'polygon(20% 0, 100% 0, 100% 100%, 0% 100%)' }}
-      />
-
-      <div className="relative z-10 max-w-7xl mx-auto px-4 w-full grid md:grid-cols-2 gap-12 items-center py-20">
-        {/* Left: Text */}
-        <div>
-          {/* Logo mark */}
-          <div className="flex flex-col lg:flex-row items-center lg:items-center gap-2 mb-6">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 w-full">
+        <div className="flex flex-col items-center text-center max-w-3xl mx-auto gap-6 md:gap-8 py-10 md:py-20">
+          {/* Big logo */}
+          <div className="animate-fade-in">
             <img
               src={LOGO_PATH}
               alt="Mandarina Store"
-              className="h-35 lg:h-50 w-auto"
+              className="h-32 sm:h-40 md:h-52 lg:h-64 w-auto"
             />
-            <h1 className=" font-['Barlow_Condensed'] text-4xl lg:text-6xl font-900 leading-none uppercase tracking-tight text-foreground mb-4">
+          </div>
+
+          {/* Decorative divider */}
+          <svg viewBox="0 0 100 12" className="w-32 h-3 text-primary/40">
+            <path d={DECORATIVE_LINE} stroke="currentColor" strokeWidth="1.5" fill="none" />
+          </svg>
+
+          {/* Headline */}
+          <h1 className="font-['Barlow_Condensed'] text-5xl sm:text-7xl lg:text-8xl font-900 leading-none uppercase tracking-tight text-foreground">
             PEGA TU
             <br />
             <span className="text-primary">ESTILO</span>
             <br />
             EN TODAS PARTES.
           </h1>
-          </div>
 
-          
-
-          <p className="text-muted-foreground max-w-sm mb-8 leading-relaxed">
+          {/* Subtitle */}
+          <p className="text-muted-foreground max-w-md leading-relaxed text-sm md:text-base">
             Stickers de vinilo premium para las calles. Resistente al agua y a los rayos UV.
           </p>
 
-          <div className="flex items-center gap-4">
+          {/* CTAs */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 pt-2">
             <button
               onClick={scrollToProducts}
-              className="bg-primary text-white px-8 py-3 font-['Barlow_Condensed'] text-lg font-700 tracking-widest uppercase hover:bg-primary/90 transition-colors"
+              className="bg-primary text-white px-8 sm:px-10 py-3 font-['Barlow_Condensed'] text-base sm:text-lg font-700 tracking-widest uppercase hover:bg-primary/90 transition-colors text-center"
             >
               COMPRAR AHORA
             </button>
@@ -68,58 +71,36 @@ export function Hero() {
               onClick={() =>
                 document.getElementById('categories')?.scrollIntoView({ behavior: 'smooth' })
               }
-              className="border border-border text-foreground px-8 py-3 font-['Barlow_Condensed'] text-lg font-700 tracking-widest uppercase hover:border-primary hover:text-primary transition-colors"
+              className="border border-border text-foreground px-8 sm:px-10 py-3 font-['Barlow_Condensed'] text-base sm:text-lg font-700 tracking-widest uppercase hover:border-primary hover:text-primary transition-colors text-center"
             >
               COLECCIONES
             </button>
           </div>
 
           {/* Social icons */}
-          <div className="flex items-center gap-5 mt-10">
-            <span className="text-xl font-['Barlow_Condensed'] tracking-widest text-muted-foreground uppercase">
+          <div className="flex items-center gap-4 pt-4">
+            <span className="text-xs md:text-sm font-['Barlow_Condensed'] tracking-widest text-muted-foreground uppercase">
               Seguinos
             </span>
             <div className="w-8 h-px bg-border" />
-            {SOCIAL_LINKS.map(({ label, href }) => {
-              const Icon = SOCIAL_ICONS[label]
-              return (
-                <a
-                  key={label}
-                  href={href}
-                  aria-label={label}
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  {Icon && <Icon size={30} />}
-                </a>
-              )
-            })}
+            <div className="flex items-center gap-2">
+              {SOCIAL_LINKS.map(({ label, href }) => {
+                const Icon = SOCIAL_ICONS[label]
+                return (
+                  <a
+                    key={label}
+                    href={href}
+                    aria-label={label}
+                    className="text-muted-foreground hover:text-primary transition-colors p-2"
+                  >
+                    {Icon && <Icon size={22} />}
+                  </a>
+                )
+              })}
+            </div>
           </div>
         </div>
-
-        {/* Right: Sticker wall collage */}
-        <div className="hidden lg:grid grid-cols-2 gap-3">
-          {[
-            'https://images.unsplash.com/photo-1763888647755-5754915925ff?w=600&h=400&fit=crop&auto=format',
-            'https://images.unsplash.com/photo-1770375142184-4655d2bd2d4e?w=600&h=400&fit=crop&auto=format',
-            'https://images.unsplash.com/photo-1758295099602-18bcd8c024b7?w=600&h=400&fit=crop&auto=format',
-            'https://images.unsplash.com/photo-1775496230770-d379e89b9e7e?w=600&h=400&fit=crop&auto=format',
-          ].map((url, i) => (
-            <div
-              key={i}
-              className={`overflow-hidden bg-card ${i === 0 ? 'col-span-2 aspect-video' : 'aspect-square'}`}
-            >
-              <ImageWithFallback
-                src={url}
-                alt="Street sticker art"
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-              />
-            </div>
-          ))}
-        </div>
       </div>
-
-      {/* Stats bar */}
-      
     </section>
   )
 }

@@ -42,3 +42,11 @@ export const LEGAL_LINKS = ['Privacidad', 'Términos', 'Cookies']
 
 /* ── Footer copyright ──────────────────────────────── */
 export const COPYRIGHT = `© ${new Date().getFullYear()} ${SITE_NAME} — Todos los derechos reservados.`
+
+/* ── Fixed categories (hardcoded, not from DB) ────── */
+export const FIXED_CATEGORIES = [
+  { slug: 'vinilos', name: 'Papel Vinilo' },
+  { slug: 'vinilo-holografico', name: 'Papel Vinilo Holográfico' },
+  { slug: 'stickers-comun', name: 'Stickers común' },
+  { slug: 'vinilo-transparente', name: 'Papel Vinilo Transparente' },
+]

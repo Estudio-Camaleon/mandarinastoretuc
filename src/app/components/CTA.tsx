@@ -2,10 +2,10 @@ import { Instagram, Facebook, MessageCircle } from 'lucide-react'
 import { ImageWithFallback } from './ImageWithFallback'
 import { SOCIAL_LINKS } from '../../lib/site'
 
-const SOCIAL_ICONS: Record<string, React.ComponentType<{ size?: number }>> = {
+const SOCIAL_ICONS: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
   Instagram,
   Facebook,
-  WhatsApp: ({ size }) => <MessageCircle size={size ?? 20} />,
+  WhatsApp: ({ size, className }) => <MessageCircle size={size ?? 20} className={className} />,
 }
 
 export function CTA() {

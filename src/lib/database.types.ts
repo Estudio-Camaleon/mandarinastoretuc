@@ -45,17 +45,28 @@ export interface Database {
         Row: Category
         Insert: Omit<Category, 'id' | 'created_at'>
         Update: Partial<Omit<Category, 'id'>>
+        Relationships: []
       }
       products: {
         Row: Product
         Insert: Omit<Product, 'id' | 'created_at'>
         Update: Partial<Omit<Product, 'id'>>
+        Relationships: []
       }
       orders: {
         Row: Order
         Insert: Omit<Order, 'id' | 'created_at'>
         Update: Partial<Omit<Order, 'id'>>
+        Relationships: []
       }
     }
+    Views: Record<string, {
+      Row: Record<string, unknown>
+      Relationships: []
+    }>
+    Functions: Record<string, {
+      Args: Record<string, unknown>
+      Returns: unknown
+    }>
   }
 }
