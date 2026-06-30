@@ -1,3 +1,9 @@
+## [1.7.0](https://github.com/Estudio-Camaleon/mandarinastoretuc/compare/v1.6.0...v1.7.0) (2026-06-30)
+
+### Features
+
+* hero mascot layout, category images, new categories (ticket, argentina) ([0e2f4c7](https://github.com/Estudio-Camaleon/mandarinastoretuc/commit/0e2f4c7fbd0ca821e8da9089e515b50303fbf4ee))
+
 ## [1.6.0](https://github.com/Estudio-Camaleon/mandarinastoretuc/compare/v1.5.0...v1.6.0) (2026-06-30)
 
 ### Features
